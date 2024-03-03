@@ -1,9 +1,9 @@
 package com.kovalexey.rdt1c.debug.ui;
 
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 
 public class Notification
@@ -22,17 +22,21 @@ public class Notification
         
     }
     
-    public static void showmessage(String textClipboard)
+    public static void showmessage(String title, String textClipboard)
     {
         Display display = getDisplay();
 
         display.asyncExec(() -> {
-        	MessageBox msgBox = new MessageBox(new Shell());
-			msgBox.setMessage(textClipboard);
-			msgBox.open();
+        	MessageDialog.openInformation(new Shell(), title, textClipboard);
+			
         });
 
         
+    }
+    
+    public static void showmessage(String textClipboard)
+    {
+        showmessage("RDT1CPlugin", textClipboard);
     }
 
     private static Display getDisplay()

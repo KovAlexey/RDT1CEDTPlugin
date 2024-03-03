@@ -15,6 +15,7 @@ import com._1c.g5.v8.dt.debug.core.model.evaluation.IEvaluationRequest;
 import com._1c.g5.v8.dt.debug.core.model.evaluation.IEvaluationResult;
 import com._1c.g5.v8.dt.debug.core.model.values.BslValuePath;
 import com._1c.g5.v8.dt.debug.model.calculations.BaseValueInfoData;
+import com._1c.g5.v8.dt.debug.model.calculations.CalculationResultBaseData;
 import com._1c.g5.v8.dt.debug.model.calculations.ViewInterface;
 
 public class DebugCommandExecutor {
@@ -48,13 +49,19 @@ public class DebugCommandExecutor {
 				.setInterfaces(evaluationInterfaces)
 				.setMaxTestSize(4096)
 				.setMultiLine(true)
-				.setEvaluationListener(new DebugCommandExecutorListener())
+				.setEvaluationListener(new DebugCommandExecutorListener(exression))
 				.build();
 		stackFrame.getDebugTarget().getEvaluationEngine().evaluateExpression(request);
 	}
 	
 	static class DebugCommandExecutorListener implements IEvaluationListener
 	{
+		
+		String expression;
+		public DebugCommandExecutorListener(String expression) {
+			super();
+			this.expression = expression;
+		}
 
 		@Override
 		public void evaluationComplete(IEvaluationResult execution_result) throws DebugException {
@@ -62,7 +69,15 @@ public class DebugCommandExecutor {
 			{
 				return;
 			}
-			BaseValueInfoData valueInfo = execution_result.getResult().getResultValueInfo();
+			CalculationResultBaseData resultBaseData = execution_result.getResult();
+			if (resultBaseData.getErrorOccurred())
+			{
+				byte[] exception = resultBaseData.getExceptionStr();
+				String result = new String(exception, StandardCharsets.UTF_8);
+				Notification.showmessage(expression, result);
+				return;
+			}
+			BaseValueInfoData valueInfo = resultBaseData.getResultValueInfo();
 			
 			byte[] val_b = valueInfo.getValueString();
 			if (val_b == null) {
@@ -73,7 +88,7 @@ public class DebugCommandExecutor {
 			
 			
 			Notification.copyClipboard(result);
-			Notification.showmessage(result);
+			Notification.showmessage(expression, result);
 		}
 		
 	}
