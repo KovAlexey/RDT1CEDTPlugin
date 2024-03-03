@@ -86,9 +86,16 @@ public class DebugCommandExecutor {
 			String result = new String(val_b, StandardCharsets.UTF_8);
 			System.out.print(result);
 			
-			
 			Notification.copyClipboard(result);
-			Notification.showmessage(expression, result);
+			
+			StringBuilder builder = new StringBuilder();
+			builder.append("\"");
+			builder.append(result);
+			builder.append("\"");
+			builder.append("\r\n");
+			builder.append("Значение было скопировано в буфер обмена.");
+			
+			Notification.showmessage(expression, builder.toString());
 		}
 		
 	}
