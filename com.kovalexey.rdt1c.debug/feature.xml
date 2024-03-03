@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="com.kovalexey.rdt1c.debug"
+      label="Плагин для интеграции с ИР Tormozit"
+      version="0.0.0.qualifier"
+      provider-name="KovAlexey">
+
+   <description url="http://www.example.com/description">
+      In process
+   </description>
+
+   <copyright url="http://www.example.com/copyright">
+      [Enter Copyright Description here.]
+   </copyright>
+
+   <license url="http://www.example.com/license">
+      [Enter License Description here.]
+   </license>
+
+   <plugin
+         id="com.kovalexey.rdt1c.debug.ui"
+         version="0.0.0"/>
+
+</feature>

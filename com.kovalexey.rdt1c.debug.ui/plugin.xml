@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <viewerContribution
+            id="com.kovalexey.rdt1ctormozit.debug.ui.viewerContributionVariableView"
+            targetID="org.eclipse.debug.ui.VariableView">
+         <action
+               class="com.kovalexey.rdt1c.debug.ui.DebugElementAction"
+               id="com.kovalexey.rdt1ctormozit.debug.ui.debugelement"
+               label="ИрОбщий.ОтЛкс()"
+               menubarPath="variableGroup"
+               tooltip="На клиенте - открывает соответствующее окно редактора ИР. На сервере - записывает объект для отложенной отладки">
+         </action>
+      </viewerContribution>
+   </extension>
+</plugin>
