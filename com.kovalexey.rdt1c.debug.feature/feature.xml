@@ -2,7 +2,7 @@
 <feature
       id="com.kovalexey.rdt1c.debug"
       label="Плагин для интеграции с ИР Tormozit"
-      version="0.0.0.qualifier"
+      version="0.1.0.qualifier"
       provider-name="KovAlexey">
 
    <description url="http://www.example.com/description">
