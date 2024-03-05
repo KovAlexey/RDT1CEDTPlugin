@@ -31,8 +31,7 @@ public class DebugElementAction implements IViewActionDelegate {
 				return;
 			} else if (objects.length == 2) {
 				executeDebugDataCompositionSchemeFromSelected(objects);
-			}
-			else if (objects.length == 1) {
+			} else if (objects.length == 1) {
 				Object obj = objects[0];
 				if (obj instanceof IBslVariable)
 				{
