@@ -24,7 +24,7 @@ public class DebugCommandExecutor {
 	{
 		StringBuilder stringBuilder = new StringBuilder();
 		stringBuilder.append("ИрОбщий.От(");
-		stringBuilder.append(var.getName());
+		stringBuilder.append(var.toWatchExpression());
 		stringBuilder.append(")");
 		
 		String executionCommand = stringBuilder.toString();
@@ -42,9 +42,9 @@ public class DebugCommandExecutor {
 	{
 		StringBuilder stringBuilder = new StringBuilder();
 		stringBuilder.append("ИрОбщий.От(");
-		stringBuilder.append(scheme.getName());
+		stringBuilder.append(scheme.toWatchExpression());
 		stringBuilder.append(",");
-		stringBuilder.append(settings.getName());
+		stringBuilder.append(settings.toWatchExpression());
 		stringBuilder.append(")");
 		
 		String executionCommand = stringBuilder.toString();
