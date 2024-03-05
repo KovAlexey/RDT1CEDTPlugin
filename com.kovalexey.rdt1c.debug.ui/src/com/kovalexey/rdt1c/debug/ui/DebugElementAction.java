@@ -7,13 +7,12 @@ import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
 
 import com._1c.g5.v8.dt.debug.core.model.IBslVariable;
-import com._1c.g5.v8.dt.debug.core.model.values.BslValueType;
-
+import com._1c.g5.v8.dt.platform.IEObjectTypeNames;
 
 public class DebugElementAction implements IViewActionDelegate {
 	ISelection selection;
-	public final String TYPE_DATA_COMPOSITION_SCHEME = "СхемаКомпоновкиДанных";
-	public final String TYPE_DATA_COMPOSITION_SETTINGS = "НастройкиКомпоновкиДанных";
+	public static final String TYPE_DATA_COMPOSITION_SCHEME_RU = "СхемаКомпоновкиДанных";
+	public static final String DATA_COMPOSITION_SETTINGS_RU = "НастройкиКомпоновкиДанных";
 	
 	public DebugElementAction() {
 		// TODO Auto-generated constructor stub
@@ -27,18 +26,13 @@ public class DebugElementAction implements IViewActionDelegate {
 			TreeSelection var_selection = (TreeSelection)selection;
 			
 			Object[] objects = var_selection.toArray();
-			if (objects.length > 2)
-			{
+			if (objects.length > 2) {
 				Notification.showmessage("Не поддерживается более двух параметров!");
 				return;
+			} else if (objects.length == 2) {
+				executeDebugDataCompositionSchemeFromSelected(objects);
 			}
-			
-			if (objects.length == 2)
-			{
-				executeDebugDataCompositionScheme(objects);
-			}
-			else if (objects.length == 1)
-			{
+			else if (objects.length == 1) {
 				Object obj = objects[0];
 				if (obj instanceof IBslVariable)
 				{
@@ -50,7 +44,7 @@ public class DebugElementAction implements IViewActionDelegate {
 
 	}
 
-	private void executeDebugDataCompositionScheme(Object[] objects) {
+	private void executeDebugDataCompositionSchemeFromSelected(Object[] objects) {
 		IBslVariable variable_scheme = null, variable_settings = null;
 		for (Object object : objects) {
 			if (object instanceof IBslVariable)
@@ -58,10 +52,14 @@ public class DebugElementAction implements IViewActionDelegate {
 				final IBslVariable variable = (IBslVariable)object;
 				
 				String type = variable.getValue().getValueTypeName();
-				if (type.equals(TYPE_DATA_COMPOSITION_SCHEME))
+				if (type.equals(TYPE_DATA_COMPOSITION_SCHEME_RU) 
+						|| type.equals(IEObjectTypeNames.DATA_COMPOSITION_SCHEMA)) {
 					variable_scheme = variable;
-				else if (type.equals(TYPE_DATA_COMPOSITION_SETTINGS))
+				}
+				else if (type.equals(DATA_COMPOSITION_SETTINGS_RU)
+						|| type.equals(IEObjectTypeNames.DATA_COMPOSITION_SETTINGS)) {
 					variable_settings = variable;
+				}
 			}
 		}
 		
