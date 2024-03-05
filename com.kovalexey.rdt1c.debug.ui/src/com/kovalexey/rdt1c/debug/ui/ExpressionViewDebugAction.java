@@ -11,6 +11,7 @@ import org.eclipse.debug.core.model.IWatchExpressionResult;
 import org.eclipse.debug.internal.core.WatchExpression;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
@@ -33,6 +34,8 @@ public class ExpressionViewDebugAction implements IViewActionDelegate {
 				&& selection instanceof TreeSelection) {
 			TreeSelection treeSelection = (TreeSelection)selection;
 			
+			TreePath[] treePath = treeSelection.getPaths();
+			
 			Object[] objects = treeSelection.toArray();
 			if (objects.length > 2) {
 				Notification.showMessage("");
@@ -48,6 +51,9 @@ public class ExpressionViewDebugAction implements IViewActionDelegate {
 						IBslValue expression_result = (IBslValue) value;
 						variables.put(selected_expression.getExpressionText(), expression_result);
 					} 
+				} else if (object instanceof IBslVariable) {
+					IBslVariable variable = (IBslVariable)object;
+					variables.put(variable.toWatchExpression(), variable.getValue());
 				}
 			}
 			DebugCommandExecutor.DebugVariables(variables);
