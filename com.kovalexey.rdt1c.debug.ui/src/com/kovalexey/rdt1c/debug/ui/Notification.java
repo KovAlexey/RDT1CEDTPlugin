@@ -19,24 +19,21 @@ public class Notification
             clipboard.dispose();
         });
 
-        
     }
     
-    public static void showmessage(String title, String textClipboard)
+    public static void showMessage(String title, String textClipboard)
     {
         Display display = getDisplay();
 
         display.asyncExec(() -> {
-        	MessageDialog.openInformation(new Shell(), title, textClipboard);
-			
+        	MessageDialog.openInformation(new Shell(), title, textClipboard);			
         });
 
-        
     }
     
-    public static void showmessage(String textClipboard)
+    public static void showMessage(String textClipboard)
     {
-        showmessage("RDT1CPlugin", textClipboard);
+        showMessage("RDT1CPlugin", textClipboard);
     }
 
     private static Display getDisplay()
