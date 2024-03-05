@@ -4,14 +4,24 @@
    <extension
          point="org.eclipse.ui.popupMenus">
       <viewerContribution
-            id="com.kovalexey.rdt1ctormozit.debug.ui.viewerContributionVariableView"
+            id="com.kovalexey.rdt1c.debug.ui.viewerContributionVariableView"
             targetID="org.eclipse.debug.ui.VariableView">
          <action
-               class="com.kovalexey.rdt1c.debug.ui.DebugElementAction"
-               id="com.kovalexey.rdt1ctormozit.debug.ui.debugelement"
-               label="ИрОбщий.ОтЛкс()"
+               class="com.kovalexey.rdt1c.debug.ui.VariableViewDebugAction"
+               id="com.kovalexey.rdt1c.debug.ui.variableview.debugelementaction"
+               label="ИрОбщий.От()"
                menubarPath="variableGroup"
-               tooltip="На клиенте - открывает соответствующее окно редактора ИР. На сервере - записывает объект для отложенной отладки">
+               tooltip="На толстом клиенте - открывает соответствующее окно редактора ИР. На сервере - записывает объект для отложенной отладки. В тонком клиенте не работает.">
+         </action>
+      </viewerContribution>
+      <viewerContribution
+            id="com.kovalexey.rdt1c.debug.ui.viewerContributionExpressionView"
+            targetID="org.eclipse.debug.ui.ExpressionView">
+         <action
+               class="com.kovalexey.rdt1c.debug.ui.ExpressionViewDebugAction"
+               id="com.kovalexey.rdt1c.debug.ui.expressionview.debugvariable"
+               label="ИрОбщий.От()"
+               menubarPath="expressionGroup">
          </action>
       </viewerContribution>
    </extension>

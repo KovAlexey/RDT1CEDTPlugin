@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Ui
+Bundle-Name: RDT1C Debug
 Bundle-SymbolicName: com.kovalexey.rdt1c.debug.ui;singleton:=true
 Bundle-Version: 0.0.1.qualifier
 Import-Package: com.google.inject;version="5.0.1"
