@@ -14,6 +14,7 @@ public class DebugElementAction implements IViewActionDelegate {
 	public static final String TYPE_DATA_COMPOSITION_SCHEME_RU = "СхемаКомпоновкиДанных";
 	public static final String DATA_COMPOSITION_SETTINGS_RU = "НастройкиКомпоновкиДанных";
 	
+	
 	public DebugElementAction() {
 		// TODO Auto-generated constructor stub
 	}
