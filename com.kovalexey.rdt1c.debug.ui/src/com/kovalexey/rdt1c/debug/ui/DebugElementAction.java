@@ -35,27 +35,7 @@ public class DebugElementAction implements IViewActionDelegate {
 			
 			if (objects.length == 2)
 			{
-				IBslVariable variable_scheme = null, variable_settings = null;
-				for (Object object : objects) {
-					if (object instanceof IBslVariable)
-					{
-						final IBslVariable variable = (IBslVariable)object;
-						
-						String type = variable.getValue().getValueTypeName();
-						if (type.equals(TYPE_DATA_COMPOSITION_SCHEME))
-							variable_scheme = variable;
-						else if (type.equals(TYPE_DATA_COMPOSITION_SETTINGS))
-							variable_settings = variable;
-					}
-					
-					if (variable_scheme != null && variable_settings != null)
-					{
-						DebugCommandExecutor.DebugDataCompostionScheme(variable_scheme, variable_settings);
-					} else 
-					{
-						Notification.showmessage("Выбранные значения не являются схемой компоновки данных с настройками!");
-					}
-				}
+				executeDebugDataCompositionScheme(objects);
 			}
 			else if (objects.length == 1)
 			{
@@ -68,6 +48,30 @@ public class DebugElementAction implements IViewActionDelegate {
 			}
 		}
 
+	}
+
+	private void executeDebugDataCompositionScheme(Object[] objects) {
+		IBslVariable variable_scheme = null, variable_settings = null;
+		for (Object object : objects) {
+			if (object instanceof IBslVariable)
+			{
+				final IBslVariable variable = (IBslVariable)object;
+				
+				String type = variable.getValue().getValueTypeName();
+				if (type.equals(TYPE_DATA_COMPOSITION_SCHEME))
+					variable_scheme = variable;
+				else if (type.equals(TYPE_DATA_COMPOSITION_SETTINGS))
+					variable_settings = variable;
+			}
+		}
+		
+		if (variable_scheme != null && variable_settings != null)
+		{
+			DebugCommandExecutor.DebugDataCompostionScheme(variable_scheme, variable_settings);
+		} else 
+		{
+			Notification.showmessage("Выбранные значения не являются схемой компоновки данных с настройками!");
+		}
 	}
 
 	@Override
