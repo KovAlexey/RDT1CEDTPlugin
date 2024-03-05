@@ -54,8 +54,7 @@ public class DebugElementAction implements IViewActionDelegate {
 				if (type.equals(TYPE_DATA_COMPOSITION_SCHEME_RU) 
 						|| type.equals(IEObjectTypeNames.DATA_COMPOSITION_SCHEMA)) {
 					variable_scheme = variable;
-				}
-				else if (type.equals(DATA_COMPOSITION_SETTINGS_RU)
+				} else if (type.equals(DATA_COMPOSITION_SETTINGS_RU)
 						|| type.equals(IEObjectTypeNames.DATA_COMPOSITION_SETTINGS)) {
 					variable_settings = variable;
 				}
@@ -65,8 +64,7 @@ public class DebugElementAction implements IViewActionDelegate {
 		if (variable_scheme != null && variable_settings != null)
 		{
 			DebugCommandExecutor.DebugDataCompostionScheme(variable_scheme, variable_settings);
-		} else 
-		{
+		} else {
 			Notification.showmessage("Выбранные значения не являются схемой компоновки данных с настройками!");
 		}
 	}
