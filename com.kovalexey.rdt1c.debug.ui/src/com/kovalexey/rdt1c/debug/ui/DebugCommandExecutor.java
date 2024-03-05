@@ -38,6 +38,26 @@ public class DebugCommandExecutor {
 		
 	}
 	
+	public static void DebugDataCompostionScheme(IBslVariable scheme, IBslVariable settings)
+	{
+		StringBuilder stringBuilder = new StringBuilder();
+		stringBuilder.append("ИрОбщий.От(");
+		stringBuilder.append(scheme.getName());
+		stringBuilder.append(",");
+		stringBuilder.append(settings.getName());
+		stringBuilder.append(")");
+		
+		String executionCommand = stringBuilder.toString();
+		try {
+			EvaluateExpression(scheme.getStackFrame(), executionCommand);
+		}catch(DebugException e)
+		{
+			// TODO: Обработка исключения
+			e.printStackTrace();
+		}
+		
+	}
+	
 	static void EvaluateExpression(IBslStackFrame stackFrame, String exression) throws DebugException
 	{
 		BslValuePath path = new BslValuePath(exression);

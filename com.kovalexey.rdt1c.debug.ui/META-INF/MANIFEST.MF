@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Ui
 Bundle-SymbolicName: com.kovalexey.rdt1c.debug.ui;singleton:=true
-Bundle-Version: 0.0.0.qualifier
+Bundle-Version: 0.0.1.qualifier
 Import-Package: com.google.inject;version="5.0.1"
 Bundle-Activator: com.kovalexey.rdt1c.debug.ui.Activator
 Bundle-Vendor: KovAlexey
@@ -11,7 +11,8 @@ Require-Bundle: org.eclipse.ui,
  com._1c.g5.wiring;bundle-version="2.3.0",
  org.eclipse.debug.core,
  com._1c.g5.v8.dt.debug.core,
- com._1c.g5.v8.dt.debug.model
+ com._1c.g5.v8.dt.debug.model,
+ com._1c.g5.v8.dt.platform;bundle-version="11.0.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Automatic-Module-Name: com.kovalexey.rdt1c.debug.ui
 Bundle-ActivationPolicy: lazy
