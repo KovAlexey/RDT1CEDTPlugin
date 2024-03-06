@@ -43,8 +43,7 @@ public class DebugCommandExecutor {
 		}
 	}
 	
-	public static void DebugThisVariable(IBslVariable var)
-	{
+	public static void DebugThisVariable(IBslVariable var) {
 		DebugThisVariable(var.getStackFrame(), var.toWatchExpression());
 	}
 	
