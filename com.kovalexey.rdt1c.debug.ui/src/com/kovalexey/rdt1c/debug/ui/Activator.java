@@ -3,8 +3,6 @@ package com.kovalexey.rdt1c.debug.ui;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
-import com._1c.g5.wiring.InjectorAwareServiceRegistrator;
-import com._1c.g5.wiring.ServiceInitialization;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 

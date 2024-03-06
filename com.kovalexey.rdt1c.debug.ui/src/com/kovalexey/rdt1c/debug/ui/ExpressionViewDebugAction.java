@@ -1,23 +1,16 @@
 package com.kovalexey.rdt1c.debug.ui;
 
-import java.util.ArrayList;
-import java.util.Dictionary;
 import java.util.HashMap;
-import java.util.Map;
 
 import org.eclipse.debug.core.model.IValue;
 import org.eclipse.debug.core.model.IWatchExpression;
-import org.eclipse.debug.core.model.IWatchExpressionResult;
-import org.eclipse.debug.internal.core.WatchExpression;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
 
 import com._1c.g5.v8.dt.debug.core.model.IBslVariable;
-import com._1c.g5.v8.dt.debug.core.model.values.IBslArrayValue;
 import com._1c.g5.v8.dt.debug.core.model.values.IBslValue;
 
 
@@ -33,8 +26,6 @@ public class ExpressionViewDebugAction implements IViewActionDelegate {
 		if (!selection.isEmpty()
 				&& selection instanceof TreeSelection) {
 			TreeSelection treeSelection = (TreeSelection)selection;
-			
-			TreePath[] treePath = treeSelection.getPaths();
 			
 			Object[] objects = treeSelection.toArray();
 			if (objects.length > 2) {
