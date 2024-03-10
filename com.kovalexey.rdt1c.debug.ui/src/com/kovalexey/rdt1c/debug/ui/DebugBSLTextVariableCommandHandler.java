@@ -24,18 +24,6 @@ import com.google.inject.Inject;
 
 public class DebugBSLTextVariableCommandHandler extends AbstractHandler {
 	
-	public IBslStackFrame testvar;
-	
-	@Override
-	public boolean isEnabled() {
-		// TODO Auto-generated method stub
-		return super.isEnabled();
-	}
-
-	public DebugBSLTextVariableCommandHandler() {
-		super();
-	}
-
 	@Inject
 	private EObjectAtOffsetHelper objectAtOffsetHelper;
 	
