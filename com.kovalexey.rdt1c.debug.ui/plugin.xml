@@ -25,4 +25,33 @@
          </action>
       </viewerContribution>
    </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            allPopups="false"
+            locationURI="popup:#BslEditorContext?after=com._1c.g5.v8.dt.commands.validate">
+         <menu
+               label="ИР">
+            <command
+                  commandId="com.kovalexey.rdt1c.debug.ui.DebugBSLTextVariableCommand"
+                  label="ИрОбщий.От()"
+                  style="push">
+            </command>
+         </menu>
+      </menuContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            id="com.kovalexey.rdt1c.debug.ui.DebugBSLTextVariableCommand"
+            name="ИрОбщий.От()">
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.handlers">
+      <handler
+            class="com.kovalexey.rdt1c.debug.ui.DebugBSLTextVariableCommandHandler"
+            commandId="com.kovalexey.rdt1c.debug.ui.DebugBSLTextVariableCommand">
+      </handler>
+   </extension>
 </plugin>

@@ -127,13 +127,11 @@ public class DebugCommandExecutor {
 		}
 	}
 	
-	public static void DebugDataCompostionScheme(IBslVariable scheme, IBslVariable settings)
-	{
+	public static void DebugDataCompostionScheme(IBslVariable scheme, IBslVariable settings) {
 		DebugDataCompostionScheme(scheme.getStackFrame(), scheme.toWatchExpression(), settings.toWatchExpression());
 	}
 	
-	public static void DebugDataCompostionScheme(IBslStackFrame stackFrame, String scheme_expression, String settings_expression)
-	{
+	public static void DebugDataCompostionScheme(IBslStackFrame stackFrame, String scheme_expression, String settings_expression) {
 		StringBuilder stringBuilder = new StringBuilder();
 		stringBuilder.append("ИрОбщий.От(");
 		stringBuilder.append(scheme_expression);
@@ -151,8 +149,7 @@ public class DebugCommandExecutor {
 		
 	}
 	
-	static void EvaluateExpression(IBslStackFrame stackFrame, String exression) throws DebugException
-	{
+	static void EvaluateExpression(IBslStackFrame stackFrame, String exression) throws DebugException {
 		BslValuePath path = new BslValuePath(exression);
 		List<ViewInterface> evaluationInterfaces = Collections.singletonList(ViewInterface.CONTEXT);
 		UUID uuid = UUID.randomUUID();
@@ -167,8 +164,7 @@ public class DebugCommandExecutor {
 		stackFrame.getDebugTarget().getEvaluationEngine().evaluateExpression(request);
 	}
 	
-	static class DebugCommandExecutorListener implements IEvaluationListener
-	{
+	static class DebugCommandExecutorListener implements IEvaluationListener {
 		
 		String expression;
 		public DebugCommandExecutorListener(String expression) {

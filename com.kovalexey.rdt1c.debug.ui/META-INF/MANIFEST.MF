@@ -3,7 +3,8 @@ Bundle-ManifestVersion: 2
 Bundle-Name: RDT1C Debug
 Bundle-SymbolicName: com.kovalexey.rdt1c.debug.ui;singleton:=true
 Bundle-Version: 0.0.1.qualifier
-Import-Package: com.google.inject;version="5.0.1"
+Import-Package: com.google.inject;version="5.0.1",
+ org.eclipse.xtext.ui.editor
 Bundle-Activator: com.kovalexey.rdt1c.debug.ui.Activator
 Bundle-Vendor: KovAlexey
 Require-Bundle: org.eclipse.ui,
@@ -12,7 +13,12 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.debug.core,
  com._1c.g5.v8.dt.debug.core,
  com._1c.g5.v8.dt.debug.model,
- com._1c.g5.v8.dt.platform;bundle-version="11.0.0"
+ com._1c.g5.v8.dt.platform;bundle-version="11.0.0",
+ com._1c.g5.v8.dt.bsl.ui;bundle-version="19.0.0",
+ org.eclipse.xtext.ui,
+ com._1c.g5.v8.dt.bsl.model,
+ org.eclipse.debug.ui;bundle-version="3.16.0",
+ com._1c.g5.v8.dt.debug.ui;bundle-version="9.2.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Automatic-Module-Name: com.kovalexey.rdt1c.debug.ui
 Bundle-ActivationPolicy: lazy
