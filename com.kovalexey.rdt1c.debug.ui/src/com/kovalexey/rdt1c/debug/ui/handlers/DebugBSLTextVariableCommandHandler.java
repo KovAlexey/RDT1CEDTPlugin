@@ -1,4 +1,4 @@
-package com.kovalexey.rdt1c.debug.ui;
+package com.kovalexey.rdt1c.debug.ui.handlers;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -21,6 +21,8 @@ import com._1c.g5.v8.dt.bsl.model.StaticFeatureAccess;
 import com._1c.g5.v8.dt.bsl.ui.menu.BslHandlerUtil;
 import com._1c.g5.v8.dt.debug.core.model.IBslStackFrame;
 import com.google.inject.Inject;
+import com.kovalexey.rdt1c.debug.ui.utils.DebugCommandExecutor;
+import com.kovalexey.rdt1c.debug.ui.utils.Notification;
 
 public class DebugBSLTextVariableCommandHandler extends AbstractHandler {
 	

@@ -3,22 +3,18 @@ Bundle-ManifestVersion: 2
 Bundle-Name: RDT1C Debug
 Bundle-SymbolicName: com.kovalexey.rdt1c.debug.ui;singleton:=true
 Bundle-Version: 0.0.1.qualifier
-Import-Package: com.google.inject;version="5.0.1",
- org.eclipse.xtext.ui.editor
+Import-Package: com._1c.g5.v8.dt.bsl.model;version="5.3.0",
+ com.google.inject;version="5.0.1"
 Bundle-Activator: com.kovalexey.rdt1c.debug.ui.Activator
 Bundle-Vendor: KovAlexey
-Require-Bundle: org.eclipse.ui,
- org.eclipse.core.runtime,
- com._1c.g5.wiring;bundle-version="2.3.0",
- org.eclipse.debug.core,
- com._1c.g5.v8.dt.debug.core,
- com._1c.g5.v8.dt.debug.model,
+Require-Bundle: com._1c.g5.wiring;bundle-version="2.3.0",
  com._1c.g5.v8.dt.platform;bundle-version="11.0.0",
  com._1c.g5.v8.dt.bsl.ui;bundle-version="19.0.0",
- org.eclipse.xtext.ui,
- com._1c.g5.v8.dt.bsl.model,
  org.eclipse.debug.ui;bundle-version="3.16.0",
- com._1c.g5.v8.dt.debug.ui;bundle-version="9.2.0"
+ com._1c.g5.v8.dt.debug.ui;bundle-version="9.2.0",
+ org.eclipse.xtext.ui;bundle-version="2.26.0",
+ com._1c.g5.v8.dt.debug.model;bundle-version="3.7.300",
+ com._1c.g5.v8.dt.debug.core;bundle-version="14.0.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Automatic-Module-Name: com.kovalexey.rdt1c.debug.ui
 Bundle-ActivationPolicy: lazy
