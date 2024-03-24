@@ -37,6 +37,11 @@
                   label="ИрОбщий.От()"
                   style="push">
             </command>
+            <command
+                  commandId="com.kovalexey.rdt1c.debug.ui.commandtest"
+                  label="Тест"
+                  style="push">
+            </command>
          </menu>
       </menuContribution>
    </extension>
@@ -46,6 +51,11 @@
             id="com.kovalexey.rdt1c.debug.ui.DebugBSLTextVariableCommand"
             name="ИрОбщий.От()">
       </command>
+      <command
+            defaultHandler="com.kovalexey.rdt1c.debug.ui.handlers.TestDialogHandler"
+            id="com.kovalexey.rdt1c.debug.ui.commandtest"
+            name="test">
+      </command>
    </extension>
    <extension
          point="org.eclipse.ui.handlers">
@@ -53,5 +63,13 @@
             class="com.kovalexey.rdt1c.debug.ui.handlers.DebugBSLTextVariableCommandHandler"
             commandId="com.kovalexey.rdt1c.debug.ui.DebugBSLTextVariableCommand">
       </handler>
+   </extension>
+   <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            default="false"
+            id="com.kovalexey.rdt1c.debug.ui.editor1"
+            name="name">
+      </editor>
    </extension>
 </plugin>

@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Editor
+Bundle-SymbolicName: com.kovalexey.bsl.editor
+Bundle-Version: 0.0.1.qualifier
+Export-Package: com.kovalexey.bsl.editor
+Bundle-Vendor: KOVALEXEY
+Fragment-Host: com._1c.g5.v8.dt.bsl.ui;bundle-version="19.0.0"
+Automatic-Module-Name: com.kovalexey.bsl.editor
+Bundle-RequiredExecutionEnvironment: JavaSE-11

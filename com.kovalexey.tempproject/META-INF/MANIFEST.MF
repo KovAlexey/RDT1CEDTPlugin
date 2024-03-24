@@ -1,0 +1,13 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Tempproject
+Bundle-SymbolicName: com.kovalexey.tempproject
+Bundle-Version: 1.0.0.qualifier
+Import-Package: com._1c.g5.v8.dt.bsl.ui.contentassist;version="8.0.0"
+Bundle-Activator: com.kovalexey.tempproject.Activator
+Bundle-Vendor: KOVALEXEY
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime
+Bundle-RequiredExecutionEnvironment: JavaSE-11
+Automatic-Module-Name: com.kovalexey.tempproject
+Bundle-ActivationPolicy: lazy
