@@ -52,7 +52,7 @@
             name="ИрОбщий.От()">
       </command>
       <command
-            defaultHandler="com.kovalexey.rdt1c.debug.ui.handlers.TestDialogHandler"
+            defaultHandler="com.kovalexey.rdt1c.debug.ui.Rdt1cExecutableExtenstionFactory:com.kovalexey.rdt1c.debug.ui.handlers.TestDialogHandler"
             id="com.kovalexey.rdt1c.debug.ui.commandtest"
             name="test">
       </command>
