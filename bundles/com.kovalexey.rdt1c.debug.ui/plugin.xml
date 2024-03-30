@@ -37,6 +37,11 @@
                   label="ИрОбщий.От()"
                   style="push">
             </command>
+            <command
+                  commandId="com.kovalexey.rdt1c.debug.ui.OpenDebugBslEditorCommand"
+                  label="ИрОбщий.Ду()"
+                  style="push">
+            </command>
          </menu>
       </menuContribution>
    </extension>
@@ -45,6 +50,11 @@
       <command
             id="com.kovalexey.rdt1c.debug.ui.DebugBSLTextVariableCommand"
             name="ИрОбщий.От()">
+      </command>
+      <command
+            defaultHandler="com.kovalexey.rdt1c.debug.ui.Rdt1cExecutableExtenstionFactory:com.kovalexey.rdt1c.debug.ui.handlers.OpenBslEditorDialogHandler"
+            id="com.kovalexey.rdt1c.debug.ui.OpenDebugBslEditorCommand"
+            name="ИрОбщий.Ду()">
       </command>
    </extension>
    <extension

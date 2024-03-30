@@ -1,8 +1,12 @@
 package com.kovalexey.rdt1c.debug.ui;
 
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.eclipse.xtext.resource.IResourceServiceProvider;
+import org.eclipse.xtext.resource.IResourceServiceProvider.Registry;
 import org.osgi.framework.BundleContext;
 
+import com._1c.g5.v8.dt.core.xtext.resource.ExtendedResourceServiceProvider;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 
@@ -17,6 +21,8 @@ public class RDT1CPlugin extends AbstractUIPlugin {
 	// The shared instance
 	private static RDT1CPlugin plugin;
 	private Injector injector;
+	private Injector bslInjector;
+
 	
 	/**
 	 * The constructor
@@ -58,13 +64,31 @@ public class RDT1CPlugin extends AbstractUIPlugin {
 	private Injector createInjector()
 	{
 		try{
-			return Guice.createInjector(new ExternnalDependeciesInjector(this));
+			return Guice.createInjector(new ExternalDependeciesInjector(this));
 		} catch (Exception e)
 		{
 			e.printStackTrace();
 		}
 		
 		return null;
+	}
+	
+	public synchronized Injector getBslInjector() {
+		
+        try {
+            URI uri = URI.createURI("*.bsl");
+            IResourceServiceProvider baseRsp = Registry.INSTANCE.getResourceServiceProvider(uri);
+            if (baseRsp instanceof ExtendedResourceServiceProvider) {
+                this.bslInjector = ((ExtendedResourceServiceProvider)baseRsp).getInjector();
+            } else {
+                throw new RuntimeException("Cannot obtain base injector form BSL IResourceServiceProvider: " + baseRsp);
+            }
+            
+        } catch (Exception var4) {
+
+            throw new RuntimeException("Failed to create injector for BSL in" + getBundle().getSymbolicName());
+        }
+        return this.bslInjector;
 	}
 
 }
