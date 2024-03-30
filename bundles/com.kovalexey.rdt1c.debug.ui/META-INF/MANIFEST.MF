@@ -5,7 +5,7 @@ Bundle-SymbolicName: com.kovalexey.rdt1c.debug.ui;singleton:=true
 Bundle-Version: 0.0.1.qualifier
 Import-Package: com.google.inject;version="5.0.1",
  org.eclipse.xtext.ui.editor
-Bundle-Activator: com.kovalexey.rdt1c.debug.ui.Activator
+Bundle-Activator: com.kovalexey.rdt1c.debug.ui.RDT1CPlugin
 Bundle-Vendor: KovAlexey
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
