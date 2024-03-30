@@ -1,4 +1,4 @@
-package com.kovalexey.rdt1c.debug.ui;
+package com.kovalexey.rdt1c.debug.ui.actions;
 
 import java.util.HashMap;
 
@@ -12,6 +12,8 @@ import org.eclipse.ui.IViewPart;
 
 import com._1c.g5.v8.dt.debug.core.model.IBslVariable;
 import com._1c.g5.v8.dt.debug.core.model.values.IBslValue;
+import com.kovalexey.rdt1c.debug.ui.utils.DebugCommandExecutor;
+import com.kovalexey.rdt1c.debug.ui.utils.Notification;
 
 
 public class ExpressionViewDebugAction implements IViewActionDelegate {
@@ -29,7 +31,7 @@ public class ExpressionViewDebugAction implements IViewActionDelegate {
 			
 			Object[] objects = treeSelection.toArray();
 			if (objects.length > 2) {
-				Notification.showMessage("");
+				Notification.showMessage("Объектов больше двух");
 				return;
 			}
 			

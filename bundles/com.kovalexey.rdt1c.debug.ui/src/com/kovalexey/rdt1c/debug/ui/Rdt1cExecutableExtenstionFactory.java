@@ -10,13 +10,13 @@ public class Rdt1cExecutableExtenstionFactory extends AbstractGuiceAwareExecutab
 	@Override
 	protected Bundle getBundle() {
 		// TODO Auto-generated method stub
-		return Activator.getDefault().getBundle();
+		return RDT1CPlugin.getDefault().getBundle();
 	}
 
 	@Override
 	protected Injector getInjector() {
 		// TODO Auto-generated method stub
-		return Activator.getDefault().getInjector();
+		return RDT1CPlugin.getDefault().getInjector();
 	}
 
 }
