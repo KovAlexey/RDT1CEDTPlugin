@@ -84,8 +84,7 @@ public class BslDebugTextEditor {
 	
 	private void buildEditor(Composite parent) {
 		IResourceValidator resourceValidator = bslInjector.getInstance(IResourceValidator.class);
-        		
-        //EmbeddedEditorFactory factory = getEmbeddedFactory();
+		
         MyCustomEditorBuilder factory = bslInjector.getInstance(MyCustomEditorBuilder.class);
         
         resourceProvider = getResourceProvider();
@@ -93,11 +92,7 @@ public class BslDebugTextEditor {
         resourceProvider.setProject(combo.getCurrentProject().getProject());
         
         factory.setResourceProvider(resourceProvider);
-   
-        
 
-        //EmbeddedEditorFactory xtextFactory = (EmbeddedEditorFactory.Builder)factory;
-        
         EmbeddedEditor editor = factory
         		.withParentNew(parent);
         
@@ -122,9 +117,12 @@ public class BslDebugTextEditor {
 		return this.editor;
 	}
 	
+	public String getEditorText() {
+		return editorModelAccess.getEditablePart();
+	}
 	
 	private void setEditorPrefix(String string) {
-		
+		editorModelAccess.updatePrefix(string);
 	}
 	
 	public EmbeddedEditorModelAccess createPartialEditor() {

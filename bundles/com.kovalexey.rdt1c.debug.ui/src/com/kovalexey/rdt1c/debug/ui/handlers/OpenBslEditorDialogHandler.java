@@ -3,6 +3,8 @@ package com.kovalexey.rdt1c.debug.ui.handlers;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.debug.ui.DebugUITools;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.handlers.HandlerUtil;
@@ -22,9 +24,11 @@ import com._1c.g5.v8.dt.core.platform.IDtProject;
 import com._1c.g5.v8.dt.core.platform.IDtProjectManager;
 import com._1c.g5.v8.dt.core.platform.IV8Project;
 import com._1c.g5.v8.dt.core.platform.IV8ProjectManager;
+import com._1c.g5.v8.dt.debug.core.model.IBslStackFrame;
 import com.google.inject.Inject;
 import com.kovalexey.rdt1c.debug.ui.RDT1CPlugin;
 import com.kovalexey.rdt1c.debug.ui.dialog.BslEditorDialog;
+import com.kovalexey.rdt1c.debug.ui.utils.Notification;
 
 public class OpenBslEditorDialogHandler extends AbstractHandler {
 	@Inject
@@ -54,8 +58,19 @@ public class OpenBslEditorDialogHandler extends AbstractHandler {
 				return state.getURI();
 			}
 		});
+		
+		IAdaptable debugContext = DebugUITools.getDebugContext();
+		if (debugContext == null) {
+			Notification.showMessage("Не запущена отладка.");
+			return null;
+		}		
 
-		BslEditorDialog dialog = new BslEditorDialog(HandlerUtil.getActiveShell(event), uri);
+		if (!(debugContext instanceof IBslStackFrame)) {
+			return null;
+		}
+		
+		IBslStackFrame bslStackFrame = (IBslStackFrame) debugContext;
+		BslEditorDialog dialog = new BslEditorDialog(HandlerUtil.getActiveShell(event), uri, bslStackFrame);
 		dialog.open();
 		
 		return null;

@@ -26,7 +26,29 @@ public class DebugCommandExecutor {
 	public static final String TYPE_DATA_COMPOSITION_SCHEME_RU = "СхемаКомпоновкиДанных";
 	public static final String DATA_COMPOSITION_SETTINGS_RU = "НастройкиКомпоновкиДанных";
 	
+	public static void ExecuteCode(IBslStackFrame stackFrame, String code) {
+		StringBuilder stringBuilder = new StringBuilder();
+		stringBuilder.append("ИрОбщий.Ду(");
+		stringBuilder.append(CreateTextForExecure(code));
+		stringBuilder.append(")");
+		
+		String executionCommand = stringBuilder.toString();
+		try {
+			EvaluateExpression(stackFrame, executionCommand);
+		} catch(DebugException e) {
+			// TODO: Обработка исключения
+			e.printStackTrace();
+		}
+	}
 	
+	public static String CreateTextForExecure(String text) {
+		StringBuilder builder = new StringBuilder();
+		builder.append("\"");
+		builder.append(text.replace("\"", "\"\"").replace("\n", "\n|"));
+		builder.append("\"");
+		
+		return builder.toString();
+	}
 	
 	public static void DebugThisVariable(IBslStackFrame stackframe, String variable) {
 		StringBuilder stringBuilder = new StringBuilder();
