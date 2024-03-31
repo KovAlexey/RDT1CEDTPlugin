@@ -14,6 +14,7 @@
 ![изображение](https://github.com/KovAlexey/RDT1CEDTPlugin/assets/16429518/0915bb9f-1ca6-40c1-ae67-8c259b5f6cbf)
 
 2) Ир Общий.Ду
+![изображение](https://github.com/KovAlexey/RDT1CEDTPlugin/assets/16429518/6bbc83e5-7b8f-42fa-ba46-9a18ecb7956e)
 
 На данный момент без передачи контекста в процедуру.
 Но планируется далее
