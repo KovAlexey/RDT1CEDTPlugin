@@ -1,5 +1,6 @@
 package com.kovalexey.rdt1c.debug.ui.dialog;
 
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.graphics.Point;
@@ -12,8 +13,13 @@ import com._1c.g5.v8.dt.bsl.resource.BslResource;
 public class BslEditorDialog extends Dialog {
 
 	private BslDebugTextEditor editor;
-	private BslResource externalResourceSet;
+	private URI resourceUri;
 
+	public BslEditorDialog(Shell parentShell, URI resourceURI) {
+		super(parentShell);
+		this.resourceUri = resourceURI;
+	}
+	
 	@Override
 	protected Control createDialogArea(Composite parent) {
 		
@@ -23,35 +29,23 @@ public class BslEditorDialog extends Dialog {
 		
 		GridLayoutFactory.fillDefaults().applyTo(composite);
 		
-		editor = new BslDebugTextEditor(composite, this.externalResourceSet.getURI());
+		editor = new BslDebugTextEditor(composite, this.resourceUri);
         editor.createPartialEditor();      
-        editor.setResourceSet(this.externalResourceSet);
         
         return composite;
 		
 	}
 
-	 
-	
 	@Override
 	protected boolean isResizable() {
-		// TODO Auto-generated method stub
 		return true;
 	}
 
-
-
 	@Override
 	protected Point getInitialSize() {
-		// TODO Auto-generated method stub
 		return new Point(500, 500);
 	}
 	
-	
-	public BslEditorDialog(Shell parentShell, BslResource resourceSet) {
-		super(parentShell);
-		this.externalResourceSet = resourceSet;
-	}
 	
 	
 }
