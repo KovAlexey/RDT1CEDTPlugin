@@ -177,10 +177,10 @@
 			<unit id="org.eclipse.xtext.xbase.lib.feature.group" version="2.26.0.v20220221-1145"/>
 		</location>
 		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
-		<!-- Plug-in Spy -->
-		<unit id="org.eclipse.pde.source.feature.group" version="0.0.0"/>
-		<!-- JDT -->
-		<unit id="org.eclipse.jdt.feature.group" version="0.0.0"/>
+            <!-- Plug-in Spy -->
+            <unit id="org.eclipse.pde.source.feature.group" version="0.0.0"/>
+            <!-- JDT -->
+            <unit id="org.eclipse.jdt.feature.group" version="0.0.0"/>
 		<repository id="eclipse_updates" location="http://download.eclipse.org/eclipse/updates/4.16/"/>
 		</location>
 	</locations>

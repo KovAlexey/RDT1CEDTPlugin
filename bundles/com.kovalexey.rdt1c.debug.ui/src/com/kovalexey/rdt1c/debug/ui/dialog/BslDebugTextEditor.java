@@ -33,6 +33,9 @@ import com._1c.g5.v8.dt.bsl.model.BslPackage;
 import com._1c.g5.v8.dt.bsl.model.Module;
 import com._1c.g5.v8.dt.bsl.model.Procedure;
 import com._1c.g5.v8.dt.bsl.resource.BslResource;
+import com._1c.g5.v8.dt.bsl.ui.editor.BslXtextDocument;
+import com._1c.g5.v8.dt.core.platform.IBmModelManager;
+import com._1c.g5.v8.dt.core.platform.IV8ProjectManager;
 import com._1c.g5.v8.dt.lcore.ui.editor.embedded.CustomEmbeddedEditorResourceProvider;
 import com._1c.g5.v8.dt.lcore.ui.editor.embedded.CustomModelAccessAwareEmbeddedEditorBuilder.CustomModelAccessAwareEmbeddedEditor;
 import com._1c.g5.v8.dt.lcore.ui.editor.util.XtextEditorUtil;
@@ -51,9 +54,7 @@ public class BslDebugTextEditor {
 	private ProjectCombo combo; // TODO: Надо переделать
 	private URI debugUri;
 	@Inject
-	private IScopeProvider scopeProvider;
-	@Inject
-	private IBslModuleContextDefService bslModuleContextDefService;
+	private IV8ProjectManager projectManager;
 	
 	public BslDebugTextEditor(Composite parent) {
 		
@@ -63,45 +64,42 @@ public class BslDebugTextEditor {
 		
 		this.bslInjector = RDT1CPlugin.getDefault().getBslInjector();
 		this.bslInjector.injectMembers(this);
+		
 		buildEditor(parent);
 	}
 	
 	public BslDebugTextEditor(Composite parent, URI uri) {
+		this.bslInjector = RDT1CPlugin.getDefault().getBslInjector();
+		this.bslInjector.injectMembers(this);
+		
 		this.parent = parent;
-		this.combo = new ProjectCombo(parent);
+		this.combo = new ProjectCombo(parent, projectManager.getProject(uri));
 		this.combo.setEnabled(false);
 		combo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 		
-		this.bslInjector = RDT1CPlugin.getDefault().getBslInjector();
-		this.bslInjector.injectMembers(this);
-		buildEditor(parent);
-		this.debugUri = uri;
 		
-		this.combo.addModifyListener(new ModifyListener() {
-			
-			@Override
-			public void modifyText(ModifyEvent e) {
-				
-				buildEditor(parent);
-				createPartialEditor();
-			}
-		});
+		this.debugUri = uri;
+		buildEditor(parent);
 	}
 	
 	private void buildEditor(Composite parent) {
 		IResourceValidator resourceValidator = bslInjector.getInstance(IResourceValidator.class);
         		
-        EmbeddedEditorFactory factory = getEmbeddedFactory();
-        resourceProvider = getResourceProvider();
+        //EmbeddedEditorFactory factory = getEmbeddedFactory();
+        MyCustomEditorBuilder factory = bslInjector.getInstance(MyCustomEditorBuilder.class);
         
-        resourceProvider.setUriSegment(debugUri);
+        resourceProvider = getResourceProvider();
+        resourceProvider.setPlatformUri(debugUri);
         resourceProvider.setProject(combo.getCurrentProject().getProject());
         
+        factory.setResourceProvider(resourceProvider);
+   
+        
+
+        //EmbeddedEditorFactory xtextFactory = (EmbeddedEditorFactory.Builder)factory;
+        
         EmbeddedEditor editor = factory
-        		.newEditor(resourceProvider)
-        		.withResourceValidator(resourceValidator)
-        		.showLineNumbers()
-        		.withParent(parent);
+        		.withParentNew(parent);
         
         this.editor = editor;
         
@@ -124,16 +122,6 @@ public class BslDebugTextEditor {
 		return this.editor;
 	}
 	
-	public void setResourceSet(BslResource resourceSet) {
-		getEditor().getDocument().tryModify(new IUnitOfWork.Void<XtextResource>() {
-
-			@Override
-			public void process(XtextResource state) throws Exception {
-				((BslResource)state).setDeepAnalysis(true);
-				System.out.print(false);
-			}
-		});
-	}
 	
 	private void setEditorPrefix(String string) {
 		

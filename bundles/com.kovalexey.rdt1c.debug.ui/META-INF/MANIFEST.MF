@@ -25,7 +25,8 @@ Require-Bundle: org.eclipse.ui,
  com._1c.g5.v8.dt.core,
  com._1c.g5.v8.dt.core.xtext,
  org.eclipse.core.filesystem,
- org.eclipse.ui.ide
+ org.eclipse.ui.ide,
+ com._1c.g5.v8.bm.core;bundle-version="8.1.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Automatic-Module-Name: com.kovalexey.rdt1c.debug.ui
 Bundle-ActivationPolicy: lazy
