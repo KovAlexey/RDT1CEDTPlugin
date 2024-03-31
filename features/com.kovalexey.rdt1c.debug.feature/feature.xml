@@ -18,7 +18,7 @@
    </license>
 
    <plugin
-         id="com.kovalexey.rdt1c.debug.ui"
+         id="org.kovalexey.rdt1c.debug.ui"
          version="0.0.0"/>
 
 </feature>
