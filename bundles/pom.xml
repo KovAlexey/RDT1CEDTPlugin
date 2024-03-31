@@ -12,12 +12,12 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>com.kovalexey</groupId>
+    <groupId>org.kovalexey</groupId>
     <artifactId>parent</artifactId>
     <version>0.0.1-SNAPSHOT</version>
   </parent>
   
-  <groupId>com.kovalexey</groupId>
+  <groupId>org.kovalexey</groupId>
   <artifactId>bundles</artifactId>
   <packaging>pom</packaging>
   <name>Bundles</name>
