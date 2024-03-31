@@ -14,11 +14,11 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>com.kovalexey</groupId>
+    <groupId>org.kovalexey</groupId>
     <artifactId>repositories</artifactId>
     <version>0.0.1-SNAPSHOT</version>
   </parent>
 
-  <artifactId>com.kovalexey.repository</artifactId>
+  <artifactId>org.kovalexey.repository</artifactId>
   <packaging>eclipse-repository</packaging>
 </project>
