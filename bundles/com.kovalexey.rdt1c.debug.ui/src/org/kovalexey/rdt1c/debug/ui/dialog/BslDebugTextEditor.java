@@ -1,46 +1,19 @@
 package org.kovalexey.rdt1c.debug.ui.dialog;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.eclipse.core.resources.IProject;
-import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.xtext.EcoreUtil2;
-import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.scoping.IScopeProvider;
 import org.eclipse.xtext.ui.editor.embedded.EmbeddedEditor;
 import org.eclipse.xtext.ui.editor.embedded.EmbeddedEditorFactory;
 import org.eclipse.xtext.ui.editor.embedded.EmbeddedEditorModelAccess;
 import org.eclipse.xtext.ui.editor.embedded.IEditedResourceProvider;
-import org.eclipse.xtext.ui.editor.model.XtextDocument;
-import org.eclipse.xtext.ui.editor.model.XtextDocumentUtil;
-import org.eclipse.xtext.ui.editor.validation.ValidationJob;
-import org.eclipse.xtext.util.concurrent.IUnitOfWork;
 import org.eclipse.xtext.validation.IResourceValidator;
 import org.kovalexey.rdt1c.debug.ui.RDT1CPlugin;
 
-import com._1c.g5.v8.dt.bsl.contextdef.IBslModuleContextDefService;
-import com._1c.g5.v8.dt.bsl.model.BslPackage;
-import com._1c.g5.v8.dt.bsl.model.Module;
-import com._1c.g5.v8.dt.bsl.model.Procedure;
-import com._1c.g5.v8.dt.bsl.resource.BslResource;
-import com._1c.g5.v8.dt.bsl.ui.editor.BslXtextDocument;
-import com._1c.g5.v8.dt.core.platform.IBmModelManager;
 import com._1c.g5.v8.dt.core.platform.IV8ProjectManager;
 import com._1c.g5.v8.dt.lcore.ui.editor.embedded.CustomEmbeddedEditorResourceProvider;
-import com._1c.g5.v8.dt.lcore.ui.editor.embedded.CustomModelAccessAwareEmbeddedEditorBuilder.CustomModelAccessAwareEmbeddedEditor;
-import com._1c.g5.v8.dt.lcore.ui.editor.util.XtextEditorUtil;
-import com._1c.g5.v8.dt.lcore.ui.editor.embedded.CustomModelAccessAwareEmbeddedEditorBuilder;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 
