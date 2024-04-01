@@ -1,4 +1,4 @@
-package com.kovalexey.rdt1c.debug.ui.utils;
+package org.kovalexey.rdt1c.debug.ui.utils;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;

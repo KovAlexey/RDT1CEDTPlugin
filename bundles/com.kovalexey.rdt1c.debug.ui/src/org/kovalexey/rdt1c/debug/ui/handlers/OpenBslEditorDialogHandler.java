@@ -1,4 +1,4 @@
-package com.kovalexey.rdt1c.debug.ui.handlers;
+package org.kovalexey.rdt1c.debug.ui.handlers;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -15,6 +15,9 @@ import org.eclipse.xtext.resource.IResourceServiceProvider;
 import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.ui.editor.XtextEditor;
 import org.eclipse.xtext.util.concurrent.IUnitOfWork;
+import org.kovalexey.rdt1c.debug.ui.RDT1CPlugin;
+import org.kovalexey.rdt1c.debug.ui.dialog.BslEditorDialog;
+import org.kovalexey.rdt1c.debug.ui.utils.Notification;
 
 import com._1c.g5.v8.dt.bsl.resource.BslResource;
 import com._1c.g5.v8.dt.bsl.ui.menu.BslHandlerUtil;
@@ -26,9 +29,6 @@ import com._1c.g5.v8.dt.core.platform.IV8Project;
 import com._1c.g5.v8.dt.core.platform.IV8ProjectManager;
 import com._1c.g5.v8.dt.debug.core.model.IBslStackFrame;
 import com.google.inject.Inject;
-import com.kovalexey.rdt1c.debug.ui.RDT1CPlugin;
-import com.kovalexey.rdt1c.debug.ui.dialog.BslEditorDialog;
-import com.kovalexey.rdt1c.debug.ui.utils.Notification;
 
 public class OpenBslEditorDialogHandler extends AbstractHandler {
 	@Inject

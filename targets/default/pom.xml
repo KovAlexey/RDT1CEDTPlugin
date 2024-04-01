@@ -21,7 +21,7 @@
 
   <groupId>org.kovalexey</groupId>
   <artifactId>default</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>0.2.0-SNAPSHOT</version>
   
   <packaging>eclipse-target-definition</packaging>
 

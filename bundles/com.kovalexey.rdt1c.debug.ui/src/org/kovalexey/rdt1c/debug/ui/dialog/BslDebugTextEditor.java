@@ -1,4 +1,4 @@
-package com.kovalexey.rdt1c.debug.ui.dialog;
+package org.kovalexey.rdt1c.debug.ui.dialog;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -27,6 +27,7 @@ import org.eclipse.xtext.ui.editor.model.XtextDocumentUtil;
 import org.eclipse.xtext.ui.editor.validation.ValidationJob;
 import org.eclipse.xtext.util.concurrent.IUnitOfWork;
 import org.eclipse.xtext.validation.IResourceValidator;
+import org.kovalexey.rdt1c.debug.ui.RDT1CPlugin;
 
 import com._1c.g5.v8.dt.bsl.contextdef.IBslModuleContextDefService;
 import com._1c.g5.v8.dt.bsl.model.BslPackage;
@@ -42,7 +43,6 @@ import com._1c.g5.v8.dt.lcore.ui.editor.util.XtextEditorUtil;
 import com._1c.g5.v8.dt.lcore.ui.editor.embedded.CustomModelAccessAwareEmbeddedEditorBuilder;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
-import com.kovalexey.rdt1c.debug.ui.RDT1CPlugin;
 
 public class BslDebugTextEditor {
 	

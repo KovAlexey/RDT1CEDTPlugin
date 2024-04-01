@@ -1,4 +1,4 @@
-package com.kovalexey.rdt1c.debug.ui;
+package org.kovalexey.rdt1c.debug.ui;
 
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.xtext.resource.IResourceServiceProvider;

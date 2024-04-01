@@ -16,12 +16,12 @@
   <parent>
     <groupId>org.kovalexey</groupId>
     <artifactId>parent</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.2.0-SNAPSHOT</version>
   </parent>
 
   <artifactId>features</artifactId>
   <packaging>pom</packaging>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>0.2.0-SNAPSHOT</version>
   <name>Features</name>
 
   <properties>
@@ -29,7 +29,7 @@
   </properties>
 
   <modules>
-    <module>com.kovalexey.rdt1c.debug.feature</module>
+    <module>org.kovalexey.rdt1c.debug.feature</module>
   </modules>
 
 
