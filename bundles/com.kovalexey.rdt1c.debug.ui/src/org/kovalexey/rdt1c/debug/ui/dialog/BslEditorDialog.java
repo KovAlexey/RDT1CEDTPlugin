@@ -10,7 +10,6 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import org.kovalexey.rdt1c.debug.ui.utils.DebugCommandExecutor;
 
-import com._1c.g5.v8.dt.bsl.resource.BslResource;
 import com._1c.g5.v8.dt.debug.core.model.IBslStackFrame;
 
 public class BslEditorDialog extends Dialog {

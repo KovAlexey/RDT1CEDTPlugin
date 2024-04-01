@@ -4,22 +4,22 @@
    <extension
          point="org.eclipse.ui.popupMenus">
       <viewerContribution
-            id="com.kovalexey.rdt1c.debug.ui.viewerContributionVariableView"
+            id="org.kovalexey.rdt1c.debug.ui.viewerContributionVariableView"
             targetID="org.eclipse.debug.ui.VariableView">
          <action
                class="org.kovalexey.rdt1c.debug.ui.actions.VariableViewDebugAction"
-               id="com.kovalexey.rdt1c.debug.ui.variableview.debugelementaction"
+               id="org.kovalexey.rdt1c.debug.ui.variableview.debugelementaction"
                label="ИрОбщий.От()"
                menubarPath="variableGroup"
                tooltip="На толстом клиенте - открывает соответствующее окно редактора ИР. На сервере - записывает объект для отложенной отладки. В тонком клиенте не работает.">
          </action>
       </viewerContribution>
       <viewerContribution
-            id="com.kovalexey.rdt1c.debug.ui.viewerContributionExpressionView"
+            id="org.kovalexey.rdt1c.debug.ui.viewerContributionExpressionView"
             targetID="org.eclipse.debug.ui.ExpressionView">
          <action
                class="org.kovalexey.rdt1c.debug.ui.actions.ExpressionViewDebugAction"
-               id="com.kovalexey.rdt1c.debug.ui.expressionview.debugvariable"
+               id="org.kovalexey.rdt1c.debug.ui.expressionview.debugvariable"
                label="ИрОбщий.От()"
                menubarPath="expressionGroup">
          </action>
@@ -33,12 +33,12 @@
          <menu
                label="ИР">
             <command
-                  commandId="com.kovalexey.rdt1c.debug.ui.DebugBSLTextVariableCommand"
+                  commandId="org.kovalexey.rdt1c.debug.ui.DebugBSLTextVariableCommand"
                   label="ИрОбщий.От()"
                   style="push">
             </command>
             <command
-                  commandId="com.kovalexey.rdt1c.debug.ui.OpenDebugBslEditorCommand"
+                  commandId="org.kovalexey.rdt1c.debug.ui.OpenDebugBslEditorCommand"
                   label="ИрОбщий.Ду()"
                   style="push">
             </command>
@@ -48,12 +48,12 @@
    <extension
          point="org.eclipse.ui.commands">
       <command
-            id="com.kovalexey.rdt1c.debug.ui.DebugBSLTextVariableCommand"
+            id="org.kovalexey.rdt1c.debug.ui.DebugBSLTextVariableCommand"
             name="ИрОбщий.От()">
       </command>
       <command
-            defaultHandler="com.kovalexey.rdt1c.debug.ui.Rdt1cExecutableExtenstionFactory:com.kovalexey.rdt1c.debug.ui.handlers.OpenBslEditorDialogHandler"
-            id="com.kovalexey.rdt1c.debug.ui.OpenDebugBslEditorCommand"
+            defaultHandler="org.kovalexey.rdt1c.debug.ui.Rdt1cExecutableExtenstionFactory:org.kovalexey.rdt1c.debug.ui.handlers.OpenBslEditorDialogHandler"
+            id="org.kovalexey.rdt1c.debug.ui.OpenDebugBslEditorCommand"
             name="ИрОбщий.Ду()">
       </command>
    </extension>
@@ -61,7 +61,7 @@
          point="org.eclipse.ui.handlers">
       <handler
             class="org.kovalexey.rdt1c.debug.ui.handlers.DebugBSLTextVariableCommandHandler"
-            commandId="com.kovalexey.rdt1c.debug.ui.DebugBSLTextVariableCommand">
+            commandId="org.kovalexey.rdt1c.debug.ui.DebugBSLTextVariableCommand">
       </handler>
    </extension>
 </plugin>
