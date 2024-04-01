@@ -1,4 +1,4 @@
-package com.kovalexey.rdt1c.debug.ui.actions;
+package org.kovalexey.rdt1c.debug.ui.actions;
 
 import java.util.ArrayList;
 
@@ -7,9 +7,9 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
+import org.kovalexey.rdt1c.debug.ui.utils.DebugCommandExecutor;
 
 import com._1c.g5.v8.dt.debug.core.model.IBslVariable;
-import com.kovalexey.rdt1c.debug.ui.utils.DebugCommandExecutor;
 
 public class VariableViewDebugAction implements IViewActionDelegate {
 	ISelection selection;

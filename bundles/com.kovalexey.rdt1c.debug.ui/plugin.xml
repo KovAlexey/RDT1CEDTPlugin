@@ -7,7 +7,7 @@
             id="com.kovalexey.rdt1c.debug.ui.viewerContributionVariableView"
             targetID="org.eclipse.debug.ui.VariableView">
          <action
-               class="com.kovalexey.rdt1c.debug.ui.actions.VariableViewDebugAction"
+               class="org.kovalexey.rdt1c.debug.ui.actions.VariableViewDebugAction"
                id="com.kovalexey.rdt1c.debug.ui.variableview.debugelementaction"
                label="ИрОбщий.От()"
                menubarPath="variableGroup"
@@ -18,7 +18,7 @@
             id="com.kovalexey.rdt1c.debug.ui.viewerContributionExpressionView"
             targetID="org.eclipse.debug.ui.ExpressionView">
          <action
-               class="com.kovalexey.rdt1c.debug.ui.actions.ExpressionViewDebugAction"
+               class="org.kovalexey.rdt1c.debug.ui.actions.ExpressionViewDebugAction"
                id="com.kovalexey.rdt1c.debug.ui.expressionview.debugvariable"
                label="ИрОбщий.От()"
                menubarPath="expressionGroup">
@@ -60,7 +60,7 @@
    <extension
          point="org.eclipse.ui.handlers">
       <handler
-            class="com.kovalexey.rdt1c.debug.ui.handlers.DebugBSLTextVariableCommandHandler"
+            class="org.kovalexey.rdt1c.debug.ui.handlers.DebugBSLTextVariableCommandHandler"
             commandId="com.kovalexey.rdt1c.debug.ui.DebugBSLTextVariableCommand">
       </handler>
    </extension>

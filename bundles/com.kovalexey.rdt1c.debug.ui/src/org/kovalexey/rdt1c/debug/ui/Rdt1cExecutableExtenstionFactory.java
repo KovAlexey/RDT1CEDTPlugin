@@ -1,4 +1,4 @@
-package com.kovalexey.rdt1c.debug.ui;
+package org.kovalexey.rdt1c.debug.ui;
 
 import org.osgi.framework.Bundle;
 

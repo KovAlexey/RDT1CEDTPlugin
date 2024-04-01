@@ -1,4 +1,4 @@
-package com.kovalexey.rdt1c.debug.ui.dialog;
+package org.kovalexey.rdt1c.debug.ui.dialog;
 
 import org.eclipse.jface.text.IDocumentPartitioner;
 import org.eclipse.jface.text.source.CompositeRuler;

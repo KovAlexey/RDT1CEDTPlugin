@@ -1,4 +1,4 @@
-package com.kovalexey.rdt1c.debug.ui.dialog;
+package org.kovalexey.rdt1c.debug.ui.dialog;
 
 import java.util.ArrayList;
 
@@ -7,11 +7,11 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.kovalexey.rdt1c.debug.ui.RDT1CPlugin;
 
 import com._1c.g5.v8.dt.core.platform.IV8Project;
 import com._1c.g5.v8.dt.core.platform.IV8ProjectManager;
 import com.google.inject.Inject;
-import com.kovalexey.rdt1c.debug.ui.RDT1CPlugin;
 
 
 public class ProjectCombo extends Combo {

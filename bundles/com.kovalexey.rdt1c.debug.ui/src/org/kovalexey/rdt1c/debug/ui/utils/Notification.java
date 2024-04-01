@@ -1,4 +1,4 @@
-package com.kovalexey.rdt1c.debug.ui.utils;
+package org.kovalexey.rdt1c.debug.ui.utils;
 
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.dnd.Clipboard;

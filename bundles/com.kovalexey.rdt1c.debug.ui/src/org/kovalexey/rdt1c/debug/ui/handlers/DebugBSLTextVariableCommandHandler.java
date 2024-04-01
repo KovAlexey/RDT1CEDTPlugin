@@ -1,4 +1,4 @@
-package com.kovalexey.rdt1c.debug.ui.handlers;
+package org.kovalexey.rdt1c.debug.ui.handlers;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -15,14 +15,14 @@ import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.ui.editor.XtextEditor;
 import org.eclipse.xtext.ui.editor.model.IXtextDocument;
 import org.eclipse.xtext.util.concurrent.IUnitOfWork;
+import org.kovalexey.rdt1c.debug.ui.utils.DebugCommandExecutor;
+import org.kovalexey.rdt1c.debug.ui.utils.Notification;
 
 import com._1c.g5.v8.dt.bsl.model.DynamicFeatureAccess;
 import com._1c.g5.v8.dt.bsl.model.StaticFeatureAccess;
 import com._1c.g5.v8.dt.bsl.ui.menu.BslHandlerUtil;
 import com._1c.g5.v8.dt.debug.core.model.IBslStackFrame;
 import com.google.inject.Inject;
-import com.kovalexey.rdt1c.debug.ui.utils.DebugCommandExecutor;
-import com.kovalexey.rdt1c.debug.ui.utils.Notification;
 
 public class DebugBSLTextVariableCommandHandler extends AbstractHandler {
 	

@@ -1,4 +1,4 @@
-package com.kovalexey.rdt1c.debug.ui;
+package org.kovalexey.rdt1c.debug.ui;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;

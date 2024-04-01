@@ -1,4 +1,4 @@
-package com.kovalexey.rdt1c.debug.ui.dialog;
+package org.kovalexey.rdt1c.debug.ui.dialog;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.jface.dialogs.Dialog;
@@ -8,9 +8,10 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
+import org.kovalexey.rdt1c.debug.ui.utils.DebugCommandExecutor;
+
 import com._1c.g5.v8.dt.bsl.resource.BslResource;
 import com._1c.g5.v8.dt.debug.core.model.IBslStackFrame;
-import com.kovalexey.rdt1c.debug.ui.utils.DebugCommandExecutor;
 
 public class BslEditorDialog extends Dialog {
 
