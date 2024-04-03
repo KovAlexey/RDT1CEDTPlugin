@@ -27,6 +27,7 @@ public class BslEditorDialog extends Dialog {
 	@Override
 	protected Control createDialogArea(Composite parent) {
 		
+				
 		Composite composite = new Composite(parent, 2048);
 		composite.setDragDetect(true); 
 		composite.setLayoutData(new GridData(4, 4, true, true, 1, 1));
@@ -34,7 +35,7 @@ public class BslEditorDialog extends Dialog {
 		GridLayoutFactory.fillDefaults().applyTo(composite);
 		
 		editor = new BslDebugTextEditor(composite, this.resourceUri);
-        editor.createPartialEditor();      
+        editor.createPartialEditor();  
         
         return composite;
 		
@@ -42,7 +43,8 @@ public class BslEditorDialog extends Dialog {
 	
 	@Override
 	protected void okPressed() {
-		String text = editor.getEditorText();
+		
+		String text = editor.getFormattedForExecuteText();
 		DebugCommandExecutor.ExecuteCode(bslStackFrame, text);
 		super.okPressed();
 	}
