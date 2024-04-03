@@ -3,6 +3,7 @@ package org.kovalexey.rdt1c.debug.ui.handlers;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.internal.runtime.Activator;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.debug.ui.DebugUITools;
 import org.eclipse.emf.common.util.URI;
@@ -12,7 +13,9 @@ import org.eclipse.xtext.resource.EObjectAtOffsetHelper;
 import org.eclipse.xtext.resource.IResourceFactory;
 import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.ui.editor.XtextEditor;
+import org.eclipse.xtext.ui.editor.embedded.EmbeddedEditorFactory;
 import org.eclipse.xtext.util.concurrent.IUnitOfWork;
+import org.kovalexey.rdt1c.debug.ui.RDT1CPlugin;
 import org.kovalexey.rdt1c.debug.ui.dialog.BslEditorDialog;
 import org.kovalexey.rdt1c.debug.ui.utils.Notification;
 
@@ -39,6 +42,7 @@ public class OpenBslEditorDialogHandler extends AbstractHandler {
     @Inject
     private IV8ProjectManager projectManager;
     private IResourceFactory resourceFactory;
+    
 
 	
 	@Override
@@ -57,14 +61,14 @@ public class OpenBslEditorDialogHandler extends AbstractHandler {
 		if (debugContext == null) {
 			Notification.showMessage("Не запущена отладка.");
 			return null;
+		}
+		IBslStackFrame bslDebugContext = debugContext.getAdapter(IBslStackFrame.class);
+		if (bslDebugContext == null) {
+			Notification.showMessage("Не запущена отладка.");
+			return null;
 		}		
 
-		if (!(debugContext instanceof IBslStackFrame)) {
-			return null;
-		}
-		
-		IBslStackFrame bslStackFrame = (IBslStackFrame) debugContext;
-		BslEditorDialog dialog = new BslEditorDialog(HandlerUtil.getActiveShell(event), uri, bslStackFrame);
+		BslEditorDialog dialog = new BslEditorDialog(HandlerUtil.getActiveShell(event), uri, bslDebugContext);
 		dialog.open();
 		
 		return null;

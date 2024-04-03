@@ -5,10 +5,11 @@ import org.eclipse.jface.text.source.CompositeRuler;
 import org.eclipse.jface.text.source.IOverviewRuler;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.xtext.ui.editor.XtextSourceViewer;
 import org.eclipse.xtext.ui.editor.XtextSourceViewerConfiguration;
 import org.eclipse.xtext.ui.editor.embedded.EmbeddedEditor;
-import org.eclipse.xtext.ui.editor.embedded.EmbeddedEditorFactory;
+import org.eclipse.xtext.ui.editor.embedded.EmbeddedEditorActions;
 import org.eclipse.xtext.ui.editor.embedded.IEditedResourceProvider;
 import org.eclipse.xtext.ui.editor.model.XtextDocument;
 import org.eclipse.xtext.ui.editor.syntaxcoloring.HighlightingHelper;
@@ -17,7 +18,6 @@ import org.eclipse.xtext.validation.CheckMode;
 
 import com._1c.g5.ides.ui.texteditor.xtext.embedded.CustomEmbeddedEditorBuilder;
 import com._1c.g5.ides.ui.texteditor.xtext.embedded.EmbeddedEditorValidationIssueProcessor;
-import com._1c.g5.v8.dt.bsl.ui.autoedit.BslDocumentPartitioner;
 
 @SuppressWarnings("restriction")
 public class MyCustomEditorBuilder extends CustomEmbeddedEditorBuilder {
@@ -70,7 +70,8 @@ public class MyCustomEditorBuilder extends CustomEmbeddedEditorBuilder {
 		XtextDocument document = this.createDocument();
 		
 		EmbeddedEditor editor = this.createEmbeddedEditor(annotationRuler, viewer, viewerConfiguration, document,
-				this.initializeActions(viewer));
+				new EmbeddedEditorActions(viewer, PlatformUI.getWorkbench())
+				);
 		this.installValidationSupport(document, viewer);
 
 		viewer.getControl().setLayoutData(new GridData(4, 4, true, true));
