@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <feature id="org.kovalexey.rdt1c.debug">
+      <category name="org.kovalexey.category.rdt1c"/>
+   </feature>
+   <category-def name="org.kovalexey.category.rdt1c" label="RDT1CEdt"/>
+</site>
