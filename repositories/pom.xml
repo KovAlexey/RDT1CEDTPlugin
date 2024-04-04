@@ -25,7 +25,7 @@
   <name>Update Sites</name>
 
   <modules>
-    <module>com.kovalexey.rdt1crepository</module>
+    <module>org.kovalexey.rdt1crepository</module>
   </modules>
 
   <properties>
