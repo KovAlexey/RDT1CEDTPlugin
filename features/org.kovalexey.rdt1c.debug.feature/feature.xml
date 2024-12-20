@@ -2,7 +2,7 @@
 <feature
       id="org.kovalexey.rdt1c.debug"
       label="Плагин для интеграции с ИР Tormozit"
-      version="0.2.0.qualifier"
+      version="0.3.0.qualifier"
       provider-name="KovAlexey">
 
    <description url="https://github.com/KovAlexey/RDT1CEDTPlugin/">
