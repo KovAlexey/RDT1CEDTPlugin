@@ -22,6 +22,9 @@ import com._1c.g5.v8.dt.bsl.model.impl.FunctionImpl;
 import com._1c.g5.v8.dt.bsl.model.impl.InvocationImpl;
 import com._1c.g5.v8.dt.bsl.model.impl.ProcedureImpl;
 import com._1c.g5.v8.dt.core.platform.IV8ProjectManager;
+import com._1c.g5.v8.dt.debug.core.model.IBslStackFrame;
+import com._1c.g5.v8.dt.debug.core.model.IBslVariable;
+import com._1c.g5.v8.dt.debug.core.model.values.IBslValue;
 import com._1c.g5.v8.dt.lcore.ui.editor.embedded.CustomEmbeddedEditorResourceProvider;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
@@ -37,6 +40,7 @@ public class BslDebugTextEditor {
 	private CustomEmbeddedEditorResourceProvider resourceProvider;
 	private ProjectCombo combo; // TODO: Надо переделать
 	private URI debugUri;
+	private IBslStackFrame bslStackFrame;
 	@Inject
 	private IV8ProjectManager projectManager;
 	@Inject
@@ -56,23 +60,93 @@ public class BslDebugTextEditor {
 		buildEditor(parent);
 	}
 	
-	public BslDebugTextEditor(Composite parent, URI uri) {
+	public BslDebugTextEditor(Composite parent, URI uri, IBslStackFrame bslStackFrame) {
 		this.bslInjector = RDT1CPlugin.getDefault().getBslInjector();
 		this.bslInjector.injectMembers(this);
 		
 		this.parent = parent;
+		this.bslStackFrame = bslStackFrame;
 		this.combo = new ProjectCombo(parent, projectManager.getProject(uri));
 		this.combo.setEnabled(false);
 		combo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 		
 		
 		this.debugUri = uri;
-		buildEditor(parent);
 		
-		prefix = "Функция Тест1()\n Возврат Новый Структура(\"Поле\", 1000);\n"
-				+ "КонецФункции\n"
-				+ "Процедура ОтладкаТест()\n";
-		suffix = "КонецПроцедуры";
+		generateContext();
+		
+		buildEditor(parent);
+	}
+
+	private void generateContext() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("Процедура ОтладкаТест()\n");
+		try {
+			var variables = bslStackFrame.getVariables();
+			for (int i = 0; i < variables.length; i++) {
+				String name = variables[i].getName();
+				IBslValue value = variables[i].getValue();
+				
+				sb.append("    ");
+				sb.append(name);
+				sb.append(" = ");
+				sb.append(getMockInitializer(value));
+				sb.append("; // ");
+				sb.append(value.getValueTypeName());
+				sb.append("\n");
+			}
+		} catch (Exception e) {
+			// ignore
+		}
+		prefix = sb.toString();
+		suffix = "\nКонецПроцедуры";
+	}
+
+	private String getMockInitializer(IBslValue value) {
+		return getMockInitializer(value, 0);
+	}
+
+	private String getMockInitializer(IBslValue value, int depth) {
+		if (depth > 2) return "Неопределено";
+		try {
+			String typeName = value.getValueTypeName();
+			if (typeName.equals("Структура") || typeName.equals("Structure")) {
+				var children = value.getVariables();
+				if (children.length == 0) return "Новый Структура";
+				StringBuilder fields = new StringBuilder();
+				StringBuilder values = new StringBuilder();
+				for (int i = 0; i < children.length; i++) {
+					fields.append(children[i].getName());
+					values.append(getMockInitializer(children[i].getValue(), depth + 1));
+					if (i < children.length - 1) {
+						fields.append(", ");
+						values.append(", ");
+					}
+				}
+				return "Новый Структура(\"" + fields.toString() + "\", " + values.toString() + ")";
+			} else if (typeName.equals("Соответствие") || typeName.equals("Map")) {
+				return "Новый Соответствие";
+			} else if (typeName.startsWith("СправочникСсылка.") || typeName.startsWith("CatalogRef.")) {
+				String metadataName = typeName.substring(typeName.indexOf('.') + 1);
+				return "Справочники." + metadataName + ".ПустаяСсылка()";
+			} else if (typeName.startsWith("ДокументСсылка.") || typeName.startsWith("DocumentRef.")) {
+				String metadataName = typeName.substring(typeName.indexOf('.') + 1);
+				return "Документы." + metadataName + ".ПустаяСсылка()";
+			} else if (typeName.startsWith("СправочникОбъект.") || typeName.startsWith("CatalogObject.")) {
+				String metadataName = typeName.substring(typeName.indexOf('.') + 1);
+				return "Справочники." + metadataName + ".СоздатьЭлемент()";
+			} else if (typeName.startsWith("ДокументОбъект.") || typeName.startsWith("DocumentObject.")) {
+				String metadataName = typeName.substring(typeName.indexOf('.') + 1);
+				return "Документы." + metadataName + ".СоздатьДокумент()";
+			} else if (typeName.equals("ТаблицаЗначений") || typeName.equals("ValueTable")) {
+				return "Новый ТаблицаЗначений";
+			} else if (typeName.equals("Массив") || typeName.equals("Array")) {
+				return "Новый Массив";
+			}
+		} catch (Exception e) {
+			// ignore
+		}
+		return "Неопределено";
 	}
 	
 	private void buildEditor(Composite parent) {
@@ -95,75 +169,10 @@ public class BslDebugTextEditor {
 	}
 	
 	public String getFormattedForExecuteText() {
-		
-		System.out.println(editorModelAccess.getSerializedModel());
-		
-		editor.getDocument().tryModify(new IUnitOfWork.Void<XtextResource>() {
-
-			@Override
-			public void process(XtextResource state) throws Exception {
- 				int offset = prefix.length();
-				
-				var startobj = objectAtOffsetHelper.resolveElementAt(state, offset);
-				
-				var procedure = getObjectProcedure(startobj);
-				if (procedure == null) {
-					throw new RuntimeException("модель развалилась");
-				}
-				printObjects(procedure, 0);
-
-			}
-		});
-		// Заглушка
+		// Возвращаем редактируемую часть (код пользователя)
 		return editorModelAccess.getEditablePart();
 	}
 	
-	
-	private ProcedureImpl getObjectProcedure(EObject object) {
-		EObject parent = object.eContainer();
-		if (parent == null) {
-			return null;
-		} else if (parent instanceof ProcedureImpl) {
-			return (ProcedureImpl)parent;
-		} else {
-			return getObjectProcedure(parent);
-		}
-	}
-	
-	private void printObjects(EObject object, int len) {
-		if (len == 10 ) {
-			return;
-		}
-		var treeiterator = object.eContents();
-		for (EObject eObject : treeiterator) {
-			
-			if (eObject instanceof FeatureAccess) {
-				System.out.print(((FeatureAccess)eObject).getName());
-			} else if (eObject instanceof InvocationImpl) {
-				InvocationImpl invocationObject = (InvocationImpl)eObject;
-				for (Expression param : invocationObject.getParams()) {
-					
-				}
-				System.out.print(((InvocationImpl)eObject).getParams());
-			} else if (eObject instanceof FunctionImpl) {
-				FunctionImpl methodObject = (FunctionImpl)eObject;
-				System.out.print(methodObject.getName());
-				for (var eObject2 : methodObject.getFormalParams()) {
-					
-				}
-				System.out.print(methodObject.getFormalParams());
-				
-			}
-			
-			
-			for (int i = 0; i < len; i ++) {
-				System.out.print("	");	
-			}
-			
-			System.out.println(eObject);
-			printObjects(eObject, len + 1);
-		}
-	}
 	
 	private CustomEmbeddedEditorResourceProvider getResourceProvider() {
 		return (CustomEmbeddedEditorResourceProvider)bslInjector.getInstance(IEditedResourceProvider.class);

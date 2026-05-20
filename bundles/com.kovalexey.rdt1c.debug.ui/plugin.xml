@@ -60,7 +60,7 @@
    <extension
          point="org.eclipse.ui.handlers">
       <handler
-            class="org.kovalexey.rdt1c.debug.ui.handlers.DebugBSLTextVariableCommandHandler"
+            class="org.kovalexey.rdt1c.debug.ui.Rdt1cExecutableExtenstionFactory:org.kovalexey.rdt1c.debug.ui.handlers.DebugBSLTextVariableCommandHandler"
             commandId="org.kovalexey.rdt1c.debug.ui.DebugBSLTextVariableCommand">
       </handler>
    </extension>
