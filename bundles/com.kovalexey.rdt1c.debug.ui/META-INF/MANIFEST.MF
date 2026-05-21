@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: RDT1C Debug
+Bundle-Name: Плагин для интеграции с инструментами отладки
 Bundle-SymbolicName: org.kovalexey.rdt1c.debug.ui;singleton:=true
 Bundle-Version: 0.3.0.qualifier
 Import-Package: 
