@@ -3,11 +3,12 @@
 <repository name='RDT1C Debug Composite Artifact Repository'
     type='org.eclipse.equinox.internal.p2.artifact.repository.CompositeArtifactRepository' version='1.0.0'>
   <properties size='1'>
-    <property name='p2.timestamp' value='1779368400349'/>
+    <property name='p2.timestamp' value='1779368918169'/>
   </properties>
-  <children size='3'>
+  <children size='4'>
     <child location='versions/0.3.0.v202605211236'/>
     <child location='versions/0.3.0.v202605211247'/>
     <child location='versions/0.3.0.v202605211257'/>
+    <child location='versions/0.3.0.v202605211305'/>
   </children>
 </repository>
