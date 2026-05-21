@@ -3,9 +3,10 @@
 <repository name='RDT1C Debug Composite Artifact Repository'
     type='org.eclipse.equinox.internal.p2.artifact.repository.CompositeArtifactRepository' version='1.0.0'>
   <properties size='1'>
-    <property name='p2.timestamp' value='1779367124452'/>
+    <property name='p2.timestamp' value='1779367835344'/>
   </properties>
-  <children size='1'>
+  <children size='2'>
     <child location='versions/0.3.0.v202605211236'/>
+    <child location='versions/0.3.0.v202605211247'/>
   </children>
 </repository>
