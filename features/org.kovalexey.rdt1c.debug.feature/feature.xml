@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
       id="org.kovalexey.rdt1c.debug"
-      label="Плагин для интеграции с ИР Tormozit"
+      label="Плагин для интеграции с инструментами отладки"
       version="0.3.0.qualifier"
       provider-name="KovAlexey">
 
