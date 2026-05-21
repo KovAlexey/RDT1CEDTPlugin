@@ -42,6 +42,11 @@
                   label="Динамический код"
                   style="push">
             </command>
+            <command
+                  commandId="org.kovalexey.rdt1c.debug.ui.GenerateBslDocCommand"
+                  label="Сгенерировать BSL-Doc из отладки"
+                  style="push">
+            </command>
          </menu>
       </menuContribution>
    </extension>
@@ -56,12 +61,20 @@
             id="org.kovalexey.rdt1c.debug.ui.OpenDebugBslEditorCommand"
             name="Динамический код">
       </command>
+      <command
+            id="org.kovalexey.rdt1c.debug.ui.GenerateBslDocCommand"
+            name="Сгенерировать BSL-Doc из отладки">
+      </command>
    </extension>
    <extension
          point="org.eclipse.ui.handlers">
       <handler
             class="org.kovalexey.rdt1c.debug.ui.Rdt1cExecutableExtenstionFactory:org.kovalexey.rdt1c.debug.ui.handlers.DebugBSLTextVariableCommandHandler"
             commandId="org.kovalexey.rdt1c.debug.ui.DebugBSLTextVariableCommand">
+      </handler>
+      <handler
+            class="org.kovalexey.rdt1c.debug.ui.Rdt1cExecutableExtenstionFactory:org.kovalexey.rdt1c.debug.ui.handlers.GenerateBslDocCommandHandler"
+            commandId="org.kovalexey.rdt1c.debug.ui.GenerateBslDocCommand">
       </handler>
    </extension>
    <extension
