@@ -9,7 +9,7 @@
          <action
                class="org.kovalexey.rdt1c.debug.ui.actions.VariableViewDebugAction"
                id="org.kovalexey.rdt1c.debug.ui.variableview.debugelementaction"
-               label="ИрОбщий.От()"
+               label="Отладить"
                menubarPath="variableGroup"
                tooltip="На толстом клиенте - открывает соответствующее окно редактора ИР. На сервере - записывает объект для отложенной отладки. В тонком клиенте не работает.">
          </action>
@@ -20,7 +20,7 @@
          <action
                class="org.kovalexey.rdt1c.debug.ui.actions.ExpressionViewDebugAction"
                id="org.kovalexey.rdt1c.debug.ui.expressionview.debugvariable"
-               label="ИрОбщий.От()"
+               label="Отладить"
                menubarPath="expressionGroup">
          </action>
       </viewerContribution>
@@ -34,12 +34,12 @@
                label="ИР">
             <command
                   commandId="org.kovalexey.rdt1c.debug.ui.DebugBSLTextVariableCommand"
-                  label="ИрОбщий.От()"
+                  label="Отладить"
                   style="push">
             </command>
             <command
                   commandId="org.kovalexey.rdt1c.debug.ui.OpenDebugBslEditorCommand"
-                  label="ИрОбщий.Ду()"
+                  label="Динамический код"
                   style="push">
             </command>
          </menu>
@@ -49,12 +49,12 @@
          point="org.eclipse.ui.commands">
       <command
             id="org.kovalexey.rdt1c.debug.ui.DebugBSLTextVariableCommand"
-            name="ИрОбщий.От()">
+            name="Отладить">
       </command>
       <command
             defaultHandler="org.kovalexey.rdt1c.debug.ui.Rdt1cExecutableExtenstionFactory:org.kovalexey.rdt1c.debug.ui.handlers.OpenBslEditorDialogHandler"
             id="org.kovalexey.rdt1c.debug.ui.OpenDebugBslEditorCommand"
-            name="ИрОбщий.Ду()">
+            name="Динамический код">
       </command>
    </extension>
    <extension
@@ -77,6 +77,12 @@
             class="org.kovalexey.rdt1c.debug.ui.preferences.RDT1CPreferencePage"
             id="org.kovalexey.rdt1c.debug.ui.preferences.RDT1CPreferencePage"
             name="Динамический код">
+      </page>
+      <page
+            category="org.kovalexey.rdt1c.debug.ui.preferences.RDT1CRootPreferencePage"
+            class="org.kovalexey.rdt1c.debug.ui.preferences.RDT1CDebugPreferencePage"
+            id="org.kovalexey.rdt1c.debug.ui.preferences.RDT1CDebugPreferencePage"
+            name="Отладить">
       </page>
    </extension>
    <extension

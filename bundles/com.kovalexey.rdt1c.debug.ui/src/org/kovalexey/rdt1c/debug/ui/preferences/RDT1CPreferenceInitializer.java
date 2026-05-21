@@ -10,6 +10,7 @@ public class RDT1CPreferenceInitializer extends AbstractPreferenceInitializer {
 	public void initializeDefaultPreferences() {
 		IPreferenceStore store = RDT1CPlugin.getDefault().getPreferenceStore();
 		store.setDefault(RDT1CPreferenceConstants.METHOD_TEMPLATE, "ИрОбщий.Ду");
+		store.setDefault(RDT1CPreferenceConstants.DEBUG_METHOD_TEMPLATE, "ИрОбщий.От");
 		store.setDefault(RDT1CPreferenceConstants.RESULT_VAR_NAME, "Р");
 		store.setDefault(RDT1CPreferenceConstants.RESULT_VAR_USED, true);
 		// Format: name:type:enabled;... 
@@ -18,3 +19,4 @@ public class RDT1CPreferenceInitializer extends AbstractPreferenceInitializer {
 		store.setDefault(RDT1CPreferenceConstants.PARAMETERS_CONFIG, defaultConfig);
 	}
 }
+
