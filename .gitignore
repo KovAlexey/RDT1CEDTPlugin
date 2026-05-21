@@ -3,6 +3,7 @@
 /bin/
 target
 GEMINI.md
-tools/
+/tools/*
+!/tools/*.py
 javadoc/
 .ai/
