@@ -3,19 +3,15 @@ package org.kovalexey.rdt1c.debug.ui.handlers;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.core.internal.runtime.Activator;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.debug.ui.DebugUITools;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.xtext.resource.EObjectAtOffsetHelper;
-import org.eclipse.xtext.resource.IResourceFactory;
 import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.ui.editor.XtextEditor;
-import org.eclipse.xtext.ui.editor.embedded.EmbeddedEditorFactory;
 import org.eclipse.xtext.util.concurrent.IUnitOfWork;
-import org.kovalexey.rdt1c.debug.ui.RDT1CPlugin;
 import org.kovalexey.rdt1c.debug.ui.dialog.BslEditorDialog;
 import org.kovalexey.rdt1c.debug.ui.utils.Notification;
 
@@ -37,14 +33,11 @@ public class OpenBslEditorDialogHandler extends AbstractHandler {
 	@Inject
 	private IDtProjectManager dtProjectManager;
 
-    @Inject
-    private IConfigurationProvider configurationProvider;
-    @Inject
-    private IV8ProjectManager projectManager;
-    private IResourceFactory resourceFactory;
-    
+	@Inject
+	private IConfigurationProvider configurationProvider;
+	@Inject
+	private IV8ProjectManager projectManager;
 
-	
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		IWorkbenchPart part = HandlerUtil.getActivePart(event);

@@ -42,10 +42,39 @@ jobs:
         name: edtautoopencontentassistant
         path: repositories/org.kovalexey.rdt1crepository/target/repository
 
+    - name: Checkout gh-pages
+      uses: actions/checkout@v4
+      with:
+        ref: gh-pages
+        path: gh-pages-dir
+      continue-on-error: true
+
+    - name: Prepare composite update site
+      run: |
+        # Extract version from built feature jar
+        FEATURE_JAR=$(ls repositories/org.kovalexey.rdt1crepository/target/repository/features/org.kovalexey.rdt1c.debug_*.jar | head -n 1)
+        FILENAME=$(basename $FEATURE_JAR)
+        VERSION=${FILENAME#org.kovalexey.rdt1c.debug_}
+        VERSION=${VERSION%.jar}
+        echo "Built version: $VERSION"
+        
+        # Ensure target directory structure exists
+        mkdir -p gh-pages-dir/master/versions/$VERSION
+        
+        # Copy built files
+        cp -R repositories/org.kovalexey.rdt1crepository/target/repository/* gh-pages-dir/master/versions/$VERSION/
+        
+        # Remove legacy root P2 files to avoid Eclipse installer confusion
+        rm -f gh-pages-dir/master/content.xml gh-pages-dir/master/artifacts.xml gh-pages-dir/master/content.jar gh-pages-dir/master/artifacts.jar
+        rm -rf gh-pages-dir/master/features gh-pages-dir/master/plugins gh-pages-dir/master/binary
+        
+        # Generate composite site files
+        python3 tools/generate-composite.py gh-pages-dir/master
+
     - name: Deploy
       uses: peaceiris/actions-gh-pages@v4
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: repositories/org.kovalexey.rdt1crepository/target/repository
-        destination_dir: master
-        keep_files: true
+        publish_dir: gh-pages-dir
+        keep_files: false
+

@@ -34,7 +34,7 @@ public class BslEditorDialog extends Dialog {
 		
 		GridLayoutFactory.fillDefaults().applyTo(composite);
 		
-		editor = new BslDebugTextEditor(composite, this.resourceUri);
+		editor = new BslDebugTextEditor(composite, this.resourceUri, this.bslStackFrame);
         editor.createPartialEditor();  
         
         return composite;

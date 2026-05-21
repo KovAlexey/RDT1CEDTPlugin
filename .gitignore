@@ -2,3 +2,7 @@
 /.idea/
 /bin/
 target
+GEMINI.md
+tools/
+javadoc/
+.ai/
