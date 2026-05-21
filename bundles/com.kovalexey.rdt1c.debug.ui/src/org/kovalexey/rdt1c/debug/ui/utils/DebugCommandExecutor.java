@@ -7,6 +7,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.model.IVariable;
 
@@ -23,6 +25,10 @@ import com._1c.g5.v8.dt.debug.model.calculations.CalculationResultBaseData;
 import com._1c.g5.v8.dt.debug.model.calculations.ViewInterface;
 import com._1c.g5.v8.dt.platform.IEObjectTypeNames;
 
+import org.eclipse.jface.preference.IPreferenceStore;
+import org.kovalexey.rdt1c.debug.ui.RDT1CPlugin;
+import org.kovalexey.rdt1c.debug.ui.preferences.RDT1CPreferenceConstants;
+
 public class DebugCommandExecutor {
 	public static final String TYPE_DATA_COMPOSITION_SCHEME_RU = "СхемаКомпоновкиДанных";
 	public static final String DATA_COMPOSITION_SETTINGS_RU = "НастройкиКомпоновкиДанных";
@@ -32,7 +38,7 @@ public class DebugCommandExecutor {
 		public java.util.List<String> assignedVars = new java.util.ArrayList<>();
 	}
 
-	private static VariableAnalysis analyzeVariables(IBslStackFrame stackFrame, String code) {
+	private static VariableAnalysis analyzeVariables(IBslStackFrame stackFrame, String code) throws DebugException {
 		VariableAnalysis result = new VariableAnalysis();
 		String cleanCode = stripStringsAndComments(code);
 		
@@ -57,29 +63,71 @@ public class DebugCommandExecutor {
 			}
 		}
 		
+		java.util.List<IVariable> variablesList = new java.util.ArrayList<>();
 		try {
-			java.util.List<IVariable> variablesList = new java.util.ArrayList<>();
 			Collections.addAll(variablesList, stackFrame.getVariables());
-			Collections.addAll(variablesList, stackFrame.getModuleVariables());
-			Collections.addAll(variablesList, stackFrame.getModuleProperties());
-			
-			for (IVariable v : variablesList) {
-				String name = v.getName();
-				String nameLower = name.toLowerCase();
-				if (allUsedLower.contains(nameLower)) {
-					if (assignedLower.contains(nameLower)) {
-						if (!result.assignedVars.contains(name)) {
-							result.assignedVars.add(name);
-						}
-					} else {
-						if (!result.structureVars.contains(name)) {
-							result.structureVars.add(name);
-						}
+		} catch (DebugException e) {
+			throw new DebugException(new Status(IStatus.ERROR, RDT1CPlugin.PLUGIN_ID, "Не удалось получить локальные переменные стека."));
+		}
+		
+		// Попытка получить переменные модуля с механизмом повтора (для обхода багов инициализации EDT)
+		if (stackFrame.hasModuleVariables()) {
+			IVariable[] vars = null;
+			Exception lastEx = null;
+			for (int retry = 0; retry < 2; retry++) {
+				try {
+					vars = stackFrame.getModuleVariables();
+					break;
+				} catch (Exception e) {
+					lastEx = e;
+					if (retry == 0) {
+						try { Thread.sleep(100); } catch (InterruptedException ie) {}
 					}
 				}
 			}
-		} catch (DebugException e) {
-			// ignore
+			if (vars == null) {
+				throw new DebugException(new Status(IStatus.ERROR, RDT1CPlugin.PLUGIN_ID, 
+						"Не удалось получить переменные модуля после повторной попытки. Ошибка: " + (lastEx != null ? lastEx.getMessage() : "неизвестна")));
+			}
+			Collections.addAll(variablesList, vars);
+		}
+		
+		// Попытка получить свойства модуля (ЭтотОбъект, Элементы и т.д.)
+		if (stackFrame.hasModuleProperties()) {
+			IVariable[] props = null;
+			Exception lastEx = null;
+			for (int retry = 0; retry < 2; retry++) {
+				try {
+					props = stackFrame.getModuleProperties();
+					break;
+				} catch (Exception e) {
+					lastEx = e;
+					if (retry == 0) {
+						try { Thread.sleep(100); } catch (InterruptedException ie) {}
+					}
+				}
+			}
+			if (props == null) {
+				throw new DebugException(new Status(IStatus.ERROR, RDT1CPlugin.PLUGIN_ID, 
+						"Не удалось получить свойства модуля (ЭтотОбъект, Элементы) после повторной попытки. Ошибка: " + (lastEx != null ? lastEx.getMessage() : "неизвестна")));
+			}
+			Collections.addAll(variablesList, props);
+		}
+		
+		for (IVariable v : variablesList) {
+			String name = v.getName();
+			String nameLower = name.toLowerCase();
+			if (allUsedLower.contains(nameLower)) {
+				if (assignedLower.contains(nameLower)) {
+					if (!result.assignedVars.contains(name)) {
+						result.assignedVars.add(name);
+					}
+				} else {
+					if (!result.structureVars.contains(name)) {
+						result.structureVars.add(name);
+					}
+				}
+			}
 		}
 		
 		return result;
@@ -156,10 +204,60 @@ public class DebugCommandExecutor {
 		return sb.toString().trim();
 	}
 
+	private static class ParamConfig {
+		public String name;
+		public String type;
+		public boolean enabled;
+		public int index;
+	}
+
 	public static void ExecuteCode(IBslStackFrame stackFrame, String code) {
-		VariableAnalysis analysis = analyzeVariables(stackFrame, code);
-		if (analysis.assignedVars.size() > 8) {
-			Notification.showMessage("Превышено ограничение (макс. 8) на количество присваиваний переменным из контекста.");
+		IPreferenceStore store = RDT1CPlugin.getDefault().getPreferenceStore();
+		String methodTemplate = store.getString(RDT1CPreferenceConstants.METHOD_TEMPLATE);
+		boolean resultVarUsed = store.getBoolean(RDT1CPreferenceConstants.RESULT_VAR_USED);
+		String resultVarName = store.getString(RDT1CPreferenceConstants.RESULT_VAR_NAME);
+		String configStr = store.getString(RDT1CPreferenceConstants.PARAMETERS_CONFIG);
+
+		java.util.List<ParamConfig> allConfigs = new java.util.ArrayList<>();
+		ParamConfig codeParam = null;
+		ParamConfig ctxParam = null;
+		java.util.List<ParamConfig> reassignedParams = new java.util.ArrayList<>();
+
+		String[] parts = configStr.split(";");
+		for (int i = 0; i < parts.length; i++) {
+			String[] sub = parts[i].split(":");
+			if (sub.length == 3) {
+				ParamConfig pc = new ParamConfig();
+				pc.name = sub[0];
+				pc.type = sub[1];
+				pc.enabled = Boolean.parseBoolean(sub[2]);
+				pc.index = i + 1;
+				if (pc.enabled) {
+					if (pc.type.equals("C")) codeParam = pc;
+					else if (pc.type.equals("S")) ctxParam = pc;
+					else if (pc.type.equals("R")) reassignedParams.add(pc);
+					allConfigs.add(pc);
+				}
+			}
+		}
+
+		if (codeParam == null || ctxParam == null) {
+			Notification.showMessage("Ошибка конфигурации: не задан параметр для Кода или Контекста.");
+			return;
+		}
+
+		VariableAnalysis analysis;
+		try {
+			analysis = analyzeVariables(stackFrame, code);
+		} catch (DebugException e) {
+			String message = "Ошибка подготовки контекста: " + e.getMessage();
+			Notification.showMessage(message);
+			logErrorToStandardLog(message, "Команда не была сформирована из-за ошибки контекста", "", e);
+			return;
+		}
+
+		if (analysis.assignedVars.size() > reassignedParams.size()) {
+			Notification.showMessage("Превышено ограничение (макс. " + reassignedParams.size() + ") на количество присваиваний переменным из контекста.");
 			return;
 		}
 
@@ -167,10 +265,10 @@ public class DebugCommandExecutor {
 		
 		// Эта часть разбирает параметр
 		for (String v : analysis.structureVars) {
-			wrappedCode.append(v).append(" = П1.").append(v).append("; ");
+			wrappedCode.append(v).append(" = ").append(ctxParam.name).append(".").append(v).append("; ");
 		}
 		for (int i = 0; i < analysis.assignedVars.size(); i++) {
-			wrappedCode.append(analysis.assignedVars.get(i)).append(" = П").append(i + 2).append("; ");
+			wrappedCode.append(analysis.assignedVars.get(i)).append(" = ").append(reassignedParams.get(i).name).append("; ");
 		}
 		
 		// Это, Собственно, выполняемый код
@@ -184,23 +282,26 @@ public class DebugCommandExecutor {
 		}
 		
 		// Это запаковка результата
-		wrappedCode.append("Р = Новый Структура(); ");
-		for (String v : analysis.structureVars) {
-			wrappedCode.append("Р.Вставить(\"").append(v).append("\", ").append(v).append("); ");
-		}
-		for (String v : analysis.assignedVars) {
-			wrappedCode.append("Р.Вставить(\"").append(v).append("\", ").append(v).append("); ");
+		if (resultVarUsed) {
+			wrappedCode.append(resultVarName).append(" = Новый Структура(); ");
+			for (String v : analysis.structureVars) {
+				wrappedCode.append(resultVarName).append(".Вставить(\"").append(v).append("\", ").append(v).append("); ");
+			}
+			for (String v : analysis.assignedVars) {
+				wrappedCode.append(resultVarName).append(".Вставить(\"").append(v).append("\", ").append(v).append("); ");
+			}
 		}
 		
 		for (int i = 0; i < analysis.assignedVars.size(); i++) {
-			wrappedCode.append("П").append(i + 2).append(" = ").append(analysis.assignedVars.get(i)).append("; ");
+			wrappedCode.append(reassignedParams.get(i).name).append(" = ").append(analysis.assignedVars.get(i)).append("; ");
 		}
 
-		StringBuilder stringBuilder = new StringBuilder();
-		stringBuilder.append("ИрОбщий.Ду(");
-		stringBuilder.append(CreateTextForExecure(wrappedCode.toString()));
+		java.util.TreeMap<Integer, String> params = new java.util.TreeMap<>();
+		params.put(codeParam.index, CreateTextForExecure(wrappedCode.toString()));
+		params.put(ctxParam.index, ""); // placeholder for now
 		
-		// П1 - Структура
+		// Структура контекста
+		StringBuilder ctxPValue = new StringBuilder();
 		if (!analysis.structureVars.isEmpty()) {
 			StringBuilder names = new StringBuilder();
 			StringBuilder values = new StringBuilder();
@@ -213,24 +314,59 @@ public class DebugCommandExecutor {
 					values.append(",");
 				}
 			}
-			stringBuilder.append(", Новый Структура(\"").append(names.toString()).append("\", ").append(values.toString()).append(")");
+			ctxPValue.append("Новый Структура(\"").append(names.toString()).append("\", ").append(values.toString()).append(")");
 		} else {
-			stringBuilder.append(", Новый Структура()");
+			ctxPValue.append("Новый Структура()");
+		}
+		params.put(ctxParam.index, ctxPValue.toString());
+		
+		// Присваиваемые параметры
+		for (int i = 0; i < analysis.assignedVars.size(); i++) {
+			params.put(reassignedParams.get(i).index, analysis.assignedVars.get(i));
 		}
 		
-		// П2..П9 - Присваиваемые параметры
-		for (String v : analysis.assignedVars) {
-			stringBuilder.append(", ").append(v);
+		StringBuilder stringBuilder = new StringBuilder();
+		stringBuilder.append(methodTemplate).append("(");
+		
+		int actualMaxIndex = Math.max(codeParam.index, ctxParam.index);
+		for (int i = 0; i < analysis.assignedVars.size(); i++) {
+			actualMaxIndex = Math.max(actualMaxIndex, reassignedParams.get(i).index);
+		}
+		
+		for (int i = 1; i <= actualMaxIndex; i++) {
+			String val = params.get(i);
+			if (val != null) {
+				stringBuilder.append(val);
+			} else {
+				stringBuilder.append("Неопределено");
+			}
+			if (i < actualMaxIndex) {
+				stringBuilder.append(", ");
+			}
 		}
 		
 		stringBuilder.append(")");
 		
 		String executionCommand = stringBuilder.toString();
 		try {
-			EvaluateExpression(stackFrame, executionCommand);
+			EvaluateExpression(stackFrame, executionCommand, wrappedCode.toString());
 		} catch(DebugException e) {
-			Notification.showMessage("Ошибка при выполнении команды: " + e.getMessage());
+			String message = "Ошибка при выполнении команды: " + e.getMessage();
+			Notification.showMessage(message);
+			logErrorToStandardLog(message, executionCommand, wrappedCode.toString(), e);
 		}
+	}
+	
+	private static void logErrorToStandardLog(String message, String command, String wrappedCode, Throwable e) {
+		StringBuilder sb = new StringBuilder();
+		sb.append(message).append("\n\n");
+		sb.append("--- ВЫПОЛНЯЕМАЯ КОМАНДА ---\n").append(command).append("\n\n");
+		sb.append("--- ОБОРАЧИВАЕМЫЙ КОД (BSL) ---\n").append(wrappedCode).append("\n");
+		if (e != null) {
+			sb.append("\n--- СТЕК ВЫЗОВОВ JAVA ---\n");
+		}
+		
+		RDT1CPlugin.getDefault().getLog().log(new Status(IStatus.ERROR, RDT1CPlugin.PLUGIN_ID, sb.toString(), e));
 	}
 	
 	public static String CreateTextForExecure(String text) {
@@ -250,7 +386,7 @@ public class DebugCommandExecutor {
 		
 		String executionCommand = stringBuilder.toString();
 		try {
-			EvaluateExpression(stackframe, executionCommand);
+			EvaluateExpression(stackframe, executionCommand, "");
 		} catch(DebugException e) {
 			Notification.showMessage("Ошибка при выполнении команды: " + e.getMessage());
 		}
@@ -354,14 +490,14 @@ public class DebugCommandExecutor {
 		
 		String executionCommand = stringBuilder.toString();
 		try {
-			EvaluateExpression(stackFrame, executionCommand);
+			EvaluateExpression(stackFrame, executionCommand, "");
 		} catch(DebugException e) {
 			Notification.showMessage("Ошибка при выполнении команды: " + e.getMessage());
 		}
 		
 	}
 	
-	static void EvaluateExpression(IBslStackFrame stackFrame, String exression) throws DebugException {
+	static void EvaluateExpression(IBslStackFrame stackFrame, String exression, String wrappedCode) throws DebugException {
 		BslValuePath path = new BslValuePath(exression);
 		List<ViewInterface> evaluationInterfaces = Collections.singletonList(ViewInterface.CONTEXT);
 		UUID uuid = UUID.randomUUID();
@@ -371,29 +507,35 @@ public class DebugCommandExecutor {
 				.setInterfaces(evaluationInterfaces)
 				.setMaxTestSize(4096)
 				.setMultiLine(true)
-				.setEvaluationListener(new DebugCommandExecutorListener(exression))
+				.setEvaluationListener(new DebugCommandExecutorListener(exression, wrappedCode))
 				.build();
 		stackFrame.getDebugTarget().getEvaluationEngine().evaluateExpression(request);
 	}
 	
 	static class DebugCommandExecutorListener implements IEvaluationListener {
 		
-		String expression;
-		public DebugCommandExecutorListener(String expression) {
+		String command;
+		String wrappedCode;
+		
+		public DebugCommandExecutorListener(String command, String wrappedCode) {
 			super();
-			this.expression = expression;
+			this.command = command;
+			this.wrappedCode = wrappedCode;
 		}
 
 		@Override
 		public void evaluationComplete(IEvaluationResult execution_result) throws DebugException {
 			if (!execution_result.isSuccess()) {
+				logErrorToStandardLog("Результат выполнения EvaluateExpression: Success=false", command, wrappedCode, null);
 				return;
 			}
 			CalculationResultBaseData resultBaseData = execution_result.getResult();
 			if (resultBaseData.getErrorOccurred()) {
 				byte[] exception = resultBaseData.getExceptionStr();
 				String result = new String(exception, StandardCharsets.UTF_8);
-				Notification.showMessage(expression, result);
+				Notification.showMessage(command, result);
+				
+				logErrorToStandardLog("Исключение в рантайме 1С: " + result, command, wrappedCode, null);
 				return;
 			}
 			BaseValueInfoData valueInfo = resultBaseData.getResultValueInfo();
@@ -414,7 +556,7 @@ public class DebugCommandExecutor {
 			builder.append("\r\n");
 			builder.append("Значение было скопировано в буфер обмена.");
 			
-			Notification.showMessage(expression, builder.toString());
+			Notification.showMessage(command, builder.toString());
 		}
 		
 	}

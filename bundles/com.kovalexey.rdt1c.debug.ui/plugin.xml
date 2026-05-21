@@ -64,4 +64,25 @@
             commandId="org.kovalexey.rdt1c.debug.ui.DebugBSLTextVariableCommand">
       </handler>
    </extension>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            category="org.eclipse.debug.ui.DebugPreferencePage"
+            class="org.kovalexey.rdt1c.debug.ui.preferences.RDT1CRootPreferencePage"
+            id="org.kovalexey.rdt1c.debug.ui.preferences.RDT1CRootPreferencePage"
+            name="RDT1C">
+      </page>
+      <page
+            category="org.kovalexey.rdt1c.debug.ui.preferences.RDT1CRootPreferencePage"
+            class="org.kovalexey.rdt1c.debug.ui.preferences.RDT1CPreferencePage"
+            id="org.kovalexey.rdt1c.debug.ui.preferences.RDT1CPreferencePage"
+            name="Динамический код">
+      </page>
+   </extension>
+   <extension
+         point="org.eclipse.core.runtime.preferences">
+      <initializer
+            class="org.kovalexey.rdt1c.debug.ui.preferences.RDT1CPreferenceInitializer">
+      </initializer>
+   </extension>
 </plugin>
