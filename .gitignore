@@ -4,6 +4,6 @@
 target
 GEMINI.md
 /tools/*
-!/tools/*.py 
+!/tools/*.py
 javadoc/
 .ai/
