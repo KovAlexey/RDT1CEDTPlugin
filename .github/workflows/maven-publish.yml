@@ -65,7 +65,7 @@ jobs:
         cp -R repositories/org.kovalexey.rdt1crepository/target/repository/* gh-pages-dir/master/versions/$VERSION/
         
         # Remove legacy root P2 files to avoid Eclipse installer confusion
-        rm -f gh-pages-dir/master/content.xml gh-pages-dir/master/artifacts.xml gh-pages-dir/master/content.jar gh-pages-dir/master/artifacts.jar
+        rm -f gh-pages-dir/master/content.xml gh-pages-dir/master/artifacts.xml gh-pages-dir/master/content.jar gh-pages-dir/master/artifacts.jar gh-pages-dir/master/content.xml.xz gh-pages-dir/master/artifacts.xml.xz gh-pages-dir/master/p2.index
         rm -rf gh-pages-dir/master/features gh-pages-dir/master/plugins gh-pages-dir/master/binary
         
         # Generate composite site files
