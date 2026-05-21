@@ -379,8 +379,13 @@ public class DebugCommandExecutor {
 	}
 	
 	public static void DebugThisVariable(IBslStackFrame stackframe, String variable) {
+		String debugMethod = RDT1CPlugin.getDefault().getPreferenceStore().getString(RDT1CPreferenceConstants.DEBUG_METHOD_TEMPLATE);
+		if (debugMethod == null || debugMethod.isEmpty()) {
+			debugMethod = "ИрОбщий.От";
+		}
 		StringBuilder stringBuilder = new StringBuilder();
-		stringBuilder.append("ИрОбщий.От(");
+		stringBuilder.append(debugMethod);
+		stringBuilder.append("(");
 		stringBuilder.append(variable);
 		stringBuilder.append(")");
 		
@@ -481,8 +486,13 @@ public class DebugCommandExecutor {
 	}
 	
 	public static void DebugDataCompostionScheme(IBslStackFrame stackFrame, String scheme_expression, String settings_expression) {
+		String debugMethod = RDT1CPlugin.getDefault().getPreferenceStore().getString(RDT1CPreferenceConstants.DEBUG_METHOD_TEMPLATE);
+		if (debugMethod == null || debugMethod.isEmpty()) {
+			debugMethod = "ИрОбщий.От";
+		}
 		StringBuilder stringBuilder = new StringBuilder();
-		stringBuilder.append("ИрОбщий.От(");
+		stringBuilder.append(debugMethod);
+		stringBuilder.append("(");
 		stringBuilder.append(scheme_expression);
 		stringBuilder.append(",");
 		stringBuilder.append(settings_expression);
