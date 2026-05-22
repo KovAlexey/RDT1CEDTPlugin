@@ -2,7 +2,6 @@ package org.kovalexey.rdt1c.debug.ui.handlers;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Collections;
 import java.util.UUID;
 
 import org.eclipse.core.commands.AbstractHandler;
@@ -47,7 +46,6 @@ import com._1c.g5.v8.dt.debug.model.calculations.CalculationResultBaseData;
 import com._1c.g5.v8.dt.debug.model.calculations.ViewInterface;
 import com.google.inject.Inject;
 
-@SuppressWarnings("restriction")
 public class GenerateBslDocCommandHandler extends AbstractHandler {
 
 	@Inject

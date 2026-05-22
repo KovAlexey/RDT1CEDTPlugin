@@ -15,7 +15,6 @@ import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.ui.editor.XtextEditor;
 import org.eclipse.xtext.ui.editor.model.IXtextDocument;
 import org.eclipse.xtext.util.concurrent.IUnitOfWork;
-import org.kovalexey.rdt1c.debug.ui.RDT1CPlugin;
 import org.kovalexey.rdt1c.debug.ui.utils.DebugCommandExecutor;
 import org.kovalexey.rdt1c.debug.ui.utils.Notification;
 

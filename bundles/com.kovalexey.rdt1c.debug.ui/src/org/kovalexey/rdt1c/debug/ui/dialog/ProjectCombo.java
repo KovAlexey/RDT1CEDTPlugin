@@ -3,8 +3,6 @@ package org.kovalexey.rdt1c.debug.ui.dialog;
 import java.util.ArrayList;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.kovalexey.rdt1c.debug.ui.RDT1CPlugin;

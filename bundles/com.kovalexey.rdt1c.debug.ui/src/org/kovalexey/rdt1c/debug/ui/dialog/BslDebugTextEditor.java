@@ -1,29 +1,20 @@
 package org.kovalexey.rdt1c.debug.ui.dialog;
 
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.xtext.resource.EObjectAtOffsetHelper;
-import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.scoping.IScopeProvider;
 import org.eclipse.xtext.ui.editor.embedded.EmbeddedEditor;
 import org.eclipse.xtext.ui.editor.embedded.EmbeddedEditorFactory;
 import org.eclipse.xtext.ui.editor.embedded.EmbeddedEditorModelAccess;
 import org.eclipse.xtext.ui.editor.embedded.IEditedResourceProvider;
-import org.eclipse.xtext.util.concurrent.IUnitOfWork;
 import org.eclipse.xtext.validation.IResourceValidator;
 import org.kovalexey.rdt1c.debug.ui.RDT1CPlugin;
 
-import com._1c.g5.v8.dt.bsl.model.Expression;
-import com._1c.g5.v8.dt.bsl.model.FeatureAccess;
-import com._1c.g5.v8.dt.bsl.model.impl.FunctionImpl;
-import com._1c.g5.v8.dt.bsl.model.impl.InvocationImpl;
-import com._1c.g5.v8.dt.bsl.model.impl.ProcedureImpl;
 import com._1c.g5.v8.dt.core.platform.IV8ProjectManager;
 import com._1c.g5.v8.dt.debug.core.model.IBslStackFrame;
-import com._1c.g5.v8.dt.debug.core.model.IBslVariable;
 import com._1c.g5.v8.dt.debug.core.model.values.IBslValue;
 import com._1c.g5.v8.dt.lcore.ui.editor.embedded.CustomEmbeddedEditorResourceProvider;
 import com.google.inject.Inject;
