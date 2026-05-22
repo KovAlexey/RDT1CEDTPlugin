@@ -15,10 +15,23 @@ import org.kovalexey.rdt1c.debug.ui.RDT1CPlugin;
 
 import com._1c.g5.v8.dt.core.platform.IV8ProjectManager;
 import com._1c.g5.v8.dt.debug.core.model.IBslStackFrame;
+import com._1c.g5.v8.dt.debug.core.model.IBslVariable;
 import com._1c.g5.v8.dt.debug.core.model.values.IBslValue;
+import com._1c.g5.v8.dt.bsl.model.Module;
+import com._1c.g5.v8.dt.bsl.model.Method;
+import com._1c.g5.v8.dt.bsl.model.Function;
+import com._1c.g5.v8.dt.bsl.model.FormalParam;
+import org.eclipse.xtext.nodemodel.ICompositeNode;
+import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 import com._1c.g5.v8.dt.lcore.ui.editor.embedded.CustomEmbeddedEditorResourceProvider;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
+import java.util.HashSet;
+import java.util.Set;
+import org.eclipse.xtext.resource.XtextResourceSet;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.EObject;
+
 
 public class BslDebugTextEditor {
 	
@@ -70,75 +83,195 @@ public class BslDebugTextEditor {
 	}
 
 	private void generateContext() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("Процедура ОтладкаТест()\n");
+		Module module = null;
 		try {
-			var variables = bslStackFrame.getVariables();
-			for (int i = 0; i < variables.length; i++) {
-				String name = variables[i].getName();
-				IBslValue value = variables[i].getValue();
-				
-				sb.append("    ");
-				sb.append(name);
-				sb.append(" = ");
-				sb.append(getMockInitializer(value));
-				sb.append("; // ");
-				sb.append(value.getValueTypeName());
-				sb.append("\n");
+			XtextResourceSet resourceSet = bslInjector.getInstance(XtextResourceSet.class);
+			Resource resource = resourceSet.getResource(debugUri, true);
+			if (resource != null && !resource.getContents().isEmpty()) {
+				EObject root = resource.getContents().get(0);
+				if (root instanceof Module) {
+					module = (Module) root;
+				}
 			}
 		} catch (Exception e) {
 			// ignore
 		}
-		prefix = sb.toString();
-		suffix = "\nКонецПроцедуры";
-	}
 
-	private String getMockInitializer(IBslValue value) {
-		return getMockInitializer(value, 0);
-	}
+		String moduleText = "";
+		if (module != null) {
+			ICompositeNode node = NodeModelUtils.getNode(module);
+			if (node != null) {
+				moduleText = node.getText();
+			}
+		}
 
-	private String getMockInitializer(IBslValue value, int depth) {
-		if (depth > 2) return "Неопределено";
+		int lineNumber = 1;
 		try {
-			String typeName = value.getValueTypeName();
-			if (typeName.equals("Структура") || typeName.equals("Structure")) {
-				var children = value.getVariables();
-				if (children.length == 0) return "Новый Структура";
-				StringBuilder fields = new StringBuilder();
-				StringBuilder values = new StringBuilder();
-				for (int i = 0; i < children.length; i++) {
-					fields.append(children[i].getName());
-					values.append(getMockInitializer(children[i].getValue(), depth + 1));
-					if (i < children.length - 1) {
-						fields.append(", ");
-						values.append(", ");
+			lineNumber = bslStackFrame.getLineNumber();
+		} catch (Exception e) {
+			// ignore
+		}
+
+		Method activeMethod = null;
+		if (module != null) {
+			try {
+				for (Method method : module.getMethods()) {
+					ICompositeNode node = NodeModelUtils.getNode(method);
+					if (node != null) {
+						int startLine = node.getStartLine();
+						int endLine = node.getEndLine();
+						if (lineNumber >= startLine && lineNumber <= endLine) {
+							activeMethod = method;
+							break;
+						}
 					}
 				}
-				return "Новый Структура(\"" + fields.toString() + "\", " + values.toString() + ")";
-			} else if (typeName.equals("Соответствие") || typeName.equals("Map")) {
-				return "Новый Соответствие";
-			} else if (typeName.startsWith("СправочникСсылка.") || typeName.startsWith("CatalogRef.")) {
-				String metadataName = typeName.substring(typeName.indexOf('.') + 1);
-				return "Справочники." + metadataName + ".ПустаяСсылка()";
-			} else if (typeName.startsWith("ДокументСсылка.") || typeName.startsWith("DocumentRef.")) {
-				String metadataName = typeName.substring(typeName.indexOf('.') + 1);
-				return "Документы." + metadataName + ".ПустаяСсылка()";
-			} else if (typeName.startsWith("СправочникОбъект.") || typeName.startsWith("CatalogObject.")) {
-				String metadataName = typeName.substring(typeName.indexOf('.') + 1);
-				return "Справочники." + metadataName + ".СоздатьЭлемент()";
-			} else if (typeName.startsWith("ДокументОбъект.") || typeName.startsWith("DocumentObject.")) {
-				String metadataName = typeName.substring(typeName.indexOf('.') + 1);
-				return "Документы." + metadataName + ".СоздатьДокумент()";
-			} else if (typeName.equals("ТаблицаЗначений") || typeName.equals("ValueTable")) {
-				return "Новый ТаблицаЗначений";
-			} else if (typeName.equals("Массив") || typeName.equals("Array")) {
-				return "Новый Массив";
+			} catch (Exception e) {
+				// ignore
+			}
+		}
+
+		java.util.Set<String> missingVars = new java.util.LinkedHashSet<>();
+
+		// Check local variables
+		try {
+			IBslVariable[] variables = bslStackFrame.getVariables();
+			if (variables != null) {
+				for (IBslVariable variable : variables) {
+					String varName = variable.getName();
+					if (varName != null && !isVariablePresent(varName, activeMethod, module)) {
+						missingVars.add(varName);
+					}
+				}
 			}
 		} catch (Exception e) {
 			// ignore
 		}
-		return "Неопределено";
+
+		// Check module variables
+		try {
+			if (bslStackFrame.hasModuleVariables()) {
+				IBslVariable[] moduleVars = bslStackFrame.getModuleVariables();
+				if (moduleVars != null) {
+					for (IBslVariable variable : moduleVars) {
+						String varName = variable.getName();
+						if (varName != null && !isVariablePresent(varName, activeMethod, module)) {
+							missingVars.add(varName);
+						}
+					}
+				}
+			}
+		} catch (Exception e) {
+			// ignore
+		}
+
+		// Check module properties
+		try {
+			if (bslStackFrame.hasModuleProperties()) {
+				IBslVariable[] moduleProps = bslStackFrame.getModuleProperties();
+				if (moduleProps != null) {
+					for (IBslVariable variable : moduleProps) {
+						String varName = variable.getName();
+						if (varName != null && !isVariablePresent(varName, activeMethod, module)) {
+							missingVars.add(varName);
+						}
+					}
+				}
+			}
+		} catch (Exception e) {
+			// ignore
+		}
+
+		int splitOffset = getOffsetOfLine(moduleText, lineNumber);
+		String originalPrefix = moduleText.substring(0, splitOffset);
+		String originalSuffix = moduleText.substring(splitOffset);
+
+		if (activeMethod != null) {
+			StringBuilder sbDeclarations = new StringBuilder();
+			for (String varName : missingVars) {
+				sbDeclarations.append("\n").append(varName).append(" = Неопределено;");
+			}
+			sbDeclarations.append("\n");
+			prefix = originalPrefix + sbDeclarations.toString();
+			suffix = originalSuffix;
+		} else {
+			StringBuilder sbModuleVars = new StringBuilder();
+			for (String varName : missingVars) {
+				sbModuleVars.append("Перем ").append(varName).append(";\n");
+			}
+			prefix = sbModuleVars.toString() + originalPrefix;
+			suffix = originalSuffix;
+		}
 	}
+
+	private static final java.util.Set<String> RESERVED_WORDS = java.util.Set.of(
+		"истина", "ложь", "неопределено", "этотобъект", "справочники", "документы",
+		"регистрысведений", "регистрынакопления", "регистрыбухгалтерии", "планывидовхарактеристик",
+		"планысчетов", "планывидоврасчета", "бизнеспроцессы", "задачи", "константы",
+		"параметрысеанса", "перечисления"
+	);
+
+	private boolean isVariablePresent(String varName, Method activeMethod, Module module) {
+		if (varName == null || varName.isBlank() || RESERVED_WORDS.contains(varName.toLowerCase())) {
+			return true;
+		}
+		
+		// 1. Check if it's a parameter of the active method
+		if (activeMethod != null) {
+			for (FormalParam param : activeMethod.getFormalParams()) {
+				if (param.getName() != null && param.getName().equalsIgnoreCase(varName)) {
+					return true;
+				}
+			}
+		}
+		
+		// 2. Check if it is already used/declared in the active method text (using regex word boundary)
+		if (activeMethod != null) {
+			org.eclipse.xtext.nodemodel.ICompositeNode methodNode = org.eclipse.xtext.nodemodel.util.NodeModelUtils.getNode(activeMethod);
+			if (methodNode != null) {
+				String methodText = methodNode.getText();
+				java.util.regex.Pattern p = java.util.regex.Pattern.compile("\\b" + java.util.regex.Pattern.quote(varName) + "\\b", java.util.regex.Pattern.CASE_INSENSITIVE);
+				if (p.matcher(methodText).find()) {
+					return true;
+				}
+			}
+		}
+		
+		// 3. Check if it is defined as a module variable in the module text
+		if (module != null) {
+			org.eclipse.xtext.nodemodel.ICompositeNode moduleNode = org.eclipse.xtext.nodemodel.util.NodeModelUtils.getNode(module);
+			if (moduleNode != null) {
+				String moduleTextStr = moduleNode.getText();
+				java.util.regex.Pattern p = java.util.regex.Pattern.compile("(?i)\\bПерем\\s+[^;]*?\\b" + java.util.regex.Pattern.quote(varName) + "\\b", java.util.regex.Pattern.CASE_INSENSITIVE);
+				if (p.matcher(moduleTextStr).find()) {
+					return true;
+				}
+			}
+		}
+		
+		return false;
+	}
+
+	private int getOffsetOfLine(String text, int lineNum) {
+		if (lineNum <= 1) return 0;
+		int currentLine = 1;
+		int offset = 0;
+		int length = text.length();
+		while (offset < length && currentLine < lineNum) {
+			char c = text.charAt(offset);
+			if (c == '\n') {
+				currentLine++;
+			} else if (c == '\r') {
+				if (offset + 1 < length && text.charAt(offset + 1) == '\n') {
+					offset++;
+				}
+				currentLine++;
+			}
+			offset++;
+		}
+		return offset;
+	}
+
 	
 	private void buildEditor(Composite parent) {
 		IResourceValidator resourceValidator = bslInjector.getInstance(IResourceValidator.class);
