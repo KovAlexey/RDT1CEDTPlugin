@@ -31,6 +31,9 @@ import java.util.Set;
 import org.eclipse.xtext.resource.XtextResourceSet;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.EObject;
+import com._1c.g5.v8.dt.bsl.scoping.BslScopeProvider;
+import org.eclipse.xtext.scoping.IScope;
+import org.eclipse.xtext.resource.IEObjectDescription;
 
 
 public class BslDebugTextEditor {
@@ -49,6 +52,8 @@ public class BslDebugTextEditor {
 	private IV8ProjectManager projectManager;
 	@Inject
 	private EObjectAtOffsetHelper objectAtOffsetHelper;
+	@Inject
+	private BslScopeProvider bslScopeProvider;
 	private String suffix = "";
 	private String prefix = "";
 	
@@ -131,6 +136,22 @@ public class BslDebugTextEditor {
 			}
 		}
 
+		java.util.Set<String> contextVarNames = new java.util.HashSet<>();
+		if (module != null) {
+			try {
+				IScope contextScope = bslScopeProvider.getContextVariablesScope(module, activeMethod);
+				if (contextScope != null) {
+					for (IEObjectDescription desc : contextScope.getAllElements()) {
+						if (desc.getName() != null) {
+							contextVarNames.add(desc.getName().getLastSegment().toLowerCase());
+						}
+					}
+				}
+			} catch (Exception e) {
+				// ignore
+			}
+		}
+
 		java.util.Set<String> missingVars = new java.util.LinkedHashSet<>();
 
 		// Check local variables
@@ -139,7 +160,7 @@ public class BslDebugTextEditor {
 			if (variables != null) {
 				for (IBslVariable variable : variables) {
 					String varName = variable.getName();
-					if (varName != null && !isVariablePresent(varName, activeMethod, module)) {
+					if (varName != null && !isVariablePresent(varName, activeMethod, module, contextVarNames)) {
 						missingVars.add(varName);
 					}
 				}
@@ -155,7 +176,7 @@ public class BslDebugTextEditor {
 				if (moduleVars != null) {
 					for (IBslVariable variable : moduleVars) {
 						String varName = variable.getName();
-						if (varName != null && !isVariablePresent(varName, activeMethod, module)) {
+						if (varName != null && !isVariablePresent(varName, activeMethod, module, contextVarNames)) {
 							missingVars.add(varName);
 						}
 					}
@@ -172,7 +193,7 @@ public class BslDebugTextEditor {
 				if (moduleProps != null) {
 					for (IBslVariable variable : moduleProps) {
 						String varName = variable.getName();
-						if (varName != null && !isVariablePresent(varName, activeMethod, module)) {
+						if (varName != null && !isVariablePresent(varName, activeMethod, module, contextVarNames)) {
 							missingVars.add(varName);
 						}
 					}
@@ -211,8 +232,12 @@ public class BslDebugTextEditor {
 		"параметрысеанса", "перечисления"
 	);
 
-	private boolean isVariablePresent(String varName, Method activeMethod, Module module) {
+	private boolean isVariablePresent(String varName, Method activeMethod, Module module, java.util.Set<String> contextVarNames) {
 		if (varName == null || varName.isBlank() || RESERVED_WORDS.contains(varName.toLowerCase())) {
+			return true;
+		}
+		
+		if (contextVarNames != null && contextVarNames.contains(varName.toLowerCase())) {
 			return true;
 		}
 		
