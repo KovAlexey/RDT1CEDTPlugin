@@ -76,10 +76,35 @@ public class GenerateBslDocCommandHandler extends AbstractHandler {
 		ITextSelection selection = (ITextSelection) editor.getSelectionProvider().getSelection();
 		int offset = selection.getOffset();
 
+		int suspendedLineVal = -1;
+		try {
+			suspendedLineVal = bslStackFrame.getLineNumber();
+		} catch (DebugException e) {
+			e.printStackTrace();
+		}
+		final int suspendedLine = suspendedLineVal;
+
 		// Obtain the method AST node
 		Method method = doc.readOnly(new IUnitOfWork<Method, XtextResource>() {
 			@Override
 			public Method exec(XtextResource state) throws Exception {
+				if (suspendedLine > 0) {
+					org.eclipse.emf.common.util.TreeIterator<EObject> it = state.getAllContents();
+					while (it.hasNext()) {
+						EObject obj = it.next();
+						if (obj instanceof Method) {
+							Method m = (Method) obj;
+							INode node = NodeModelUtils.findActualNodeFor(m);
+							if (node != null) {
+								int startLine = node.getStartLine();
+								int endLine = node.getEndLine();
+								if (suspendedLine >= startLine && suspendedLine <= endLine) {
+									return m;
+								}
+							}
+						}
+					}
+				}
 				EObject current = objectAtOffsetHelper.resolveElementAt(state, offset);
 				while (current != null && !(current instanceof Method)) {
 					current = current.eContainer();
@@ -89,7 +114,7 @@ public class GenerateBslDocCommandHandler extends AbstractHandler {
 		});
 
 		if (method == null) {
-			Notification.showMessage("Не найден метод под курсором.");
+			Notification.showMessage("Не удалось определить метод для документирования.");
 			return null;
 		}
 
