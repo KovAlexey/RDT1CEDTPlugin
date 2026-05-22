@@ -1,0 +1,15 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Тесты плагина интеграции с инструментами отладки
+Bundle-SymbolicName: org.kovalexey.rdt1c.debug.ui.tests;singleton:=true
+Bundle-Version: 0.5.0.qualifier
+Bundle-Vendor: KovAlexey
+Require-Bundle: org.junit,
+ org.mockito,
+ org.kovalexey.rdt1c.debug.ui,
+ com._1c.g5.v8.dt.bsl.model,
+ com._1c.g5.v8.dt.debug.core,
+ org.eclipse.emf.common,
+ org.eclipse.emf.ecore
+Bundle-RequiredExecutionEnvironment: JavaSE-17
+Automatic-Module-Name: org.kovalexey.rdt1c.debug.ui.tests
