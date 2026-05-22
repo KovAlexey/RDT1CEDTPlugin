@@ -1,7 +1,10 @@
 package org.kovalexey.rdt1c.debug.ui.utils;
 
 import java.util.Map;
+import java.util.List;
+import java.util.HashMap;
 import com._1c.g5.v8.dt.bsl.model.Method;
+import com._1c.g5.v8.dt.bsl.model.Function;
 import com._1c.g5.v8.dt.bsl.model.FormalParam;
 import com._1c.g5.v8.dt.debug.core.model.values.IBslValue;
 import com._1c.g5.v8.dt.debug.core.model.IBslVariable;
@@ -306,5 +309,172 @@ public class BslDocGenerator {
         } else {
             sb.append(prefix).append(typeName).append("\n");
         }
+    }
+
+    public static Map<Integer, String> parseParamMapping(String mappingStr) {
+        Map<Integer, String> map = new HashMap<>();
+        String[] parts = (mappingStr != null && !mappingStr.isEmpty()) ? mappingStr.split(";") : new String[0];
+        for (int i = 0; i < 10; i++) {
+            String keyName = (i < parts.length && parts[i] != null && !parts[i].trim().isEmpty()) ? parts[i].trim() : "П" + (i + 1);
+            map.put(i + 1, keyName);
+        }
+        return map;
+    }
+
+    public static String generateEvaluationExpression(String methodName, Method method) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(methodName).append("(");
+        List<FormalParam> params = method.getFormalParams();
+        for (int i = 0; i < params.size(); i++) {
+            FormalParam param = params.get(i);
+            String name = param.getName();
+            if (name == null || name.trim().isEmpty()) {
+                sb.append("Неопределено");
+            } else {
+                sb.append(name.trim());
+            }
+            if (i < params.size() - 1) {
+                sb.append(", ");
+            }
+        }
+        sb.append(")");
+        return sb.toString();
+    }
+
+    private static Map<String, IBslValue> extractFields(IBslValue value) {
+        Map<String, IBslValue> fields = new HashMap<>();
+        if (value == null) {
+            return fields;
+        }
+        String typeName = value.getValueTypeName();
+        try {
+            IBslVariable[] vars = value.getVariables();
+            if (vars != null) {
+                if ("Структура".equalsIgnoreCase(typeName)) {
+                    for (IBslVariable v : vars) {
+                        IBslValue childVal = v.getValue();
+                        String childName = v.getName();
+                        if (childName != null && childVal != null) {
+                            fields.put(childName.toLowerCase(), childVal);
+                        }
+                    }
+                } else if ("Соответствие".equalsIgnoreCase(typeName)) {
+                    for (IBslVariable v : vars) {
+                        IBslValue entryVal = v.getValue();
+                        if (entryVal != null) {
+                            UnwrappedKeyValue unwrapped = unwrapKeyValue(entryVal);
+                            if (unwrapped != null && unwrapped.key != null && unwrapped.value != null) {
+                                fields.put(unwrapped.key.toLowerCase(), unwrapped.value);
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            // Log or ignore
+        }
+        return fields;
+    }
+
+    public static String generateDocFromBslValue(Method method, IBslValue value, Map<Integer, String> mapping) {
+        if (value == null) {
+            return null;
+        }
+
+        String typeName = value.getValueTypeName();
+        if (typeName != null && "Строка".equalsIgnoreCase(typeName)) {
+            String strVal = null;
+            try {
+                strVal = value.getValueString();
+            } catch (Exception e) {
+                // Ignore
+            }
+            if (strVal != null) {
+                if (strVal.startsWith("\"") && strVal.endsWith("\"")) {
+                    strVal = strVal.substring(1, strVal.length() - 1);
+                }
+                strVal = strVal.replace("\"\"", "\"");
+                return strVal;
+            }
+        }
+
+        Map<String, IBslValue> fields = extractFields(value);
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("// <Описание ").append(method instanceof Function ? "функции" : "процедуры").append(">\n");
+        sb.append("//\n");
+
+        List<FormalParam> formalParams = method.getFormalParams();
+        if (!formalParams.isEmpty()) {
+            sb.append("// Параметры:\n");
+            for (int i = 0; i < formalParams.size(); i++) {
+                FormalParam param = formalParams.get(i);
+                String paramName = param.getName();
+                if (paramName == null || paramName.trim().isEmpty()) {
+                    continue;
+                }
+
+                int paramIndex = i + 1;
+                String keyName = mapping.get(paramIndex);
+                if (keyName == null) {
+                    keyName = "П" + paramIndex;
+                }
+
+                IBslValue paramVal = fields.get(keyName.toLowerCase());
+                if (paramVal != null) {
+                    buildTypeDescription(paramName, paramVal, 0, sb);
+                } else {
+                    sb.append("//  ").append(paramName).append(" - Произвольный\n");
+                }
+            }
+        }
+
+        if (method instanceof Function) {
+            sb.append("//\n// Возвращаемое значение:\n");
+            IBslValue retVal = null;
+            String[] retKeys = {"результат", "возврат", "result", "return"};
+            for (String rk : retKeys) {
+                if (fields.containsKey(rk)) {
+                    retVal = fields.get(rk);
+                    break;
+                }
+            }
+
+            if (retVal != null) {
+                buildTypeDescription("Возвращаемое значение", retVal, 0, sb);
+            } else {
+                sb.append("//  Произвольный - <Описание возвращаемого значения>\n");
+            }
+        }
+
+        return sb.toString();
+    }
+
+    public static String generateParameterDoc(String paramName, IBslValue value) {
+        if (value == null) {
+            return "//  " + paramName + " - Произвольный\n";
+        }
+        String typeName = value.getValueTypeName();
+        if (typeName != null && "Строка".equalsIgnoreCase(typeName)) {
+            String strVal = null;
+            try {
+                strVal = value.getValueString();
+            } catch (Exception e) {
+                // Ignore
+            }
+            if (strVal != null) {
+                if (strVal.startsWith("\"") && strVal.endsWith("\"")) {
+                    strVal = strVal.substring(1, strVal.length() - 1);
+                }
+                strVal = strVal.replace("\"\"", "\"");
+                if (strVal.startsWith("//")) {
+                    return strVal + (strVal.endsWith("\n") ? "" : "\n");
+                }
+                return "//  " + paramName + " - " + strVal + "\n";
+            }
+        }
+        StringBuilder sb = new StringBuilder();
+        buildTypeDescription(paramName, value, 0, sb);
+        return sb.toString();
     }
 }

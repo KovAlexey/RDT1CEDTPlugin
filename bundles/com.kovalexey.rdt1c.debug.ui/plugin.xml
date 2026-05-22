@@ -97,6 +97,12 @@
             id="org.kovalexey.rdt1c.debug.ui.preferences.RDT1CDebugPreferencePage"
             name="Отладить">
       </page>
+      <page
+            category="org.kovalexey.rdt1c.debug.ui.preferences.RDT1CRootPreferencePage"
+            class="org.kovalexey.rdt1c.debug.ui.preferences.RDT1CBslDocPreferencePage"
+            id="org.kovalexey.rdt1c.debug.ui.preferences.RDT1CBslDocPreferencePage"
+            name="Генерация комментариев BSL">
+      </page>
    </extension>
    <extension
          point="org.eclipse.core.runtime.preferences">

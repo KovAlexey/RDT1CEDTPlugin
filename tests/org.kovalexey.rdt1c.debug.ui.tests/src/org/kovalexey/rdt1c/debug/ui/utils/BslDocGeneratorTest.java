@@ -293,4 +293,72 @@ public class BslDocGeneratorTest {
         String doc = BslDocGenerator.generateDoc(procedure, values);
         assertTrue(doc.contains("//  Форма - см. Справочник.Номенклатура.Форма.ФормаЭлемента"));
     }
+
+    @Test
+    public void testParseParamMapping() {
+        Map<Integer, String> mapping = BslDocGenerator.parseParamMapping("A;B;;D");
+        assertEquals("A", mapping.get(1));
+        assertEquals("B", mapping.get(2));
+        assertEquals("П3", mapping.get(3));
+        assertEquals("D", mapping.get(4));
+        assertEquals("П10", mapping.get(10));
+    }
+
+    @Test
+    public void testGenerateEvaluationExpression() {
+        Procedure procedure = Mockito.mock(Procedure.class);
+        EList<FormalParam> params = new BasicEList<>();
+        params.add(mockParam("Param1"));
+        params.add(mockParam(""));
+        params.add(mockParam("Param3"));
+        Mockito.when(procedure.getFormalParams()).thenReturn(params);
+
+        String expr = BslDocGenerator.generateEvaluationExpression("MyModule.MyFunc", procedure);
+        assertEquals("MyModule.MyFunc(Param1, Неопределено, Param3)", expr);
+    }
+
+    @Test
+    public void testGenerateDocFromBslValueString() throws Exception {
+        Procedure procedure = Mockito.mock(Procedure.class);
+        Mockito.when(procedure.getFormalParams()).thenReturn(new BasicEList<>());
+
+        IBslValue strVal = mockPrimitive("Строка", "\"// custom comment block\"");
+        String doc = BslDocGenerator.generateDocFromBslValue(procedure, strVal, new HashMap<>());
+        assertEquals("// custom comment block", doc);
+    }
+
+    @Test
+    public void testGenerateDocFromBslValueStructure() throws Exception {
+        Function function = Mockito.mock(Function.class);
+        EList<FormalParam> params = new BasicEList<>();
+        params.add(mockParam("Param1"));
+        Mockito.when(function.getFormalParams()).thenReturn(params);
+
+        Map<String, IBslValue> structFields = new HashMap<>();
+        structFields.put("key1", mockPrimitive("Число", "123"));
+        structFields.put("возврат", mockPrimitive("Булево", "Ложь"));
+        IBslValue struct = mockStructure(structFields);
+
+        Map<Integer, String> mapping = new HashMap<>();
+        mapping.put(1, "key1");
+
+        String doc = BslDocGenerator.generateDocFromBslValue(function, struct, mapping);
+        assertTrue(doc.contains("//  Param1 - Число"));
+        assertTrue(doc.contains("//  Возвращаемое значение - Булево"));
+    }
+
+    @Test
+    public void testGenerateParameterDoc() throws Exception {
+        IBslValue nullVal = null;
+        assertEquals("//  param1 - Произвольный\n", BslDocGenerator.generateParameterDoc("param1", nullVal));
+
+        IBslValue strVal = mockPrimitive("Строка", "\"// custom line\"");
+        assertEquals("// custom line\n", BslDocGenerator.generateParameterDoc("param1", strVal));
+
+        IBslValue strVal2 = mockPrimitive("Строка", "\"Число\"");
+        assertEquals("//  param1 - Число\n", BslDocGenerator.generateParameterDoc("param1", strVal2));
+
+        IBslValue numVal = mockPrimitive("Число", "42");
+        assertEquals("//  param1 - Число\n", BslDocGenerator.generateParameterDoc("param1", numVal));
+    }
 }
