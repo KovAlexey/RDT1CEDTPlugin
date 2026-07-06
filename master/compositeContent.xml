@@ -3,13 +3,14 @@
 <repository name='RDT1C Debug Composite Metadata Repository'
     type='org.eclipse.equinox.internal.p2.metadata.repository.CompositeMetadataRepository' version='1.0.0'>
   <properties size='1'>
-    <property name='p2.timestamp' value='1779415688973'/>
+    <property name='p2.timestamp' value='1783296891462'/>
   </properties>
-  <children size='5'>
+  <children size='6'>
     <child location='versions/0.3.0.v202605211236'/>
     <child location='versions/0.3.0.v202605211247'/>
     <child location='versions/0.3.0.v202605211257'/>
     <child location='versions/0.3.0.v202605211305'/>
     <child location='versions/0.5.0.v202605220205'/>
+    <child location='versions/0.5.0.v202607060009'/>
   </children>
 </repository>
