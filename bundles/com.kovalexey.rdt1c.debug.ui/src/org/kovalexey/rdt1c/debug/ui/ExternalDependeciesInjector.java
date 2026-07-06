@@ -24,14 +24,14 @@ public class ExternalDependeciesInjector extends AbstractServiceAwareModule {
 		bind(IBmModelManager.class).toService();
 		bind(IDtProjectManager.class).toService();
 		bind(IConfigurationProvider.class).toService();
-		
+
 		bind(EObjectAtOffsetHelper.class).toProvider(new Provider<EObjectAtOffsetHelper>() {
 			@Override
 			public EObjectAtOffsetHelper get() {
 				return RDT1CPlugin.getDefault().getBslInjector().getInstance(com._1c.g5.v8.dt.bsl.resource.BslEObjectAtOffsetHelper.class);
 			}
 		});
-		
+
 	}
 
 }

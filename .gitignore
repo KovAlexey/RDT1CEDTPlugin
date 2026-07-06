@@ -7,3 +7,5 @@ GEMINI.md
 !/tools/*.py
 javadoc/
 .ai/
+.gemini/
+AGENTS.md
